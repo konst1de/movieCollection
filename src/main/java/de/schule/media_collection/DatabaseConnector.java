@@ -21,11 +21,8 @@ public class DatabaseConnector
     private String password = "";
     
     
-	public static void main( String[] args ) throws SQLException, ClassNotFoundException
-    {
-        
-        DatabaseConnector connector = new DatabaseConnector();
-        connector.connection = connector.getConnection();
+    public DatabaseConnector() throws SQLException{
+    	this.connection = this.getConnection();
     }
 	
 	
