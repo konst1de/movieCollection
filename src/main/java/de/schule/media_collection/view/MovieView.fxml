@@ -16,7 +16,7 @@
         <tabs>
           <Tab text="Movie">
                <content>
-                  <TableView prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="tMovie" prefHeight="200.0" prefWidth="200.0">
                     <columns>
                       <TableColumn prefWidth="75.0" text="ID" />
                       <TableColumn prefWidth="75.0" text="Ttile" />
