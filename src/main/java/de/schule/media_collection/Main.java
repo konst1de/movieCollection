@@ -1,6 +1,7 @@
 package de.schule.media_collection;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import de.schule.media_collection.Control.Controller;
 import de.schule.media_collection.view.View;
@@ -14,9 +15,8 @@ import javafx.stage.Stage;
 
 public class Main{
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 //		Application.launch(View.class, null);
 		Controller controller = new Controller();
-		controller.addMovieToCollection("Napoleon Dynamite", 120 , "Komödie" ,"Super Film!");
 	}
 }

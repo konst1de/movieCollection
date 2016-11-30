@@ -3,25 +3,31 @@ package de.schule.media_collection.Control;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.common.io.ByteStreams;
 
 import de.schule.media_collection.Data.DatabaseConnector;
 
 public class Controller {
+	List<Movie> movieList = new ArrayList<Movie>();
+	List<User> userList = new ArrayList<User>();
+	User currentUser;
 	DatabaseConnector dbConn;
-	public Controller(){
+	public Controller() throws SQLException{
 		try {
 			dbConn = new DatabaseConnector();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.movieList = this.getAllMovies();
+
 	}
 	
-//	public void addMovieToCollection(int userId, String title, String release_date, int runtime, String genre, String description){
-
 	public void addMovieToCollection(String title, int runtime, String genre, String description){
 		byte[] bytes = null;
 		InputStream is;
@@ -33,6 +39,60 @@ public class Controller {
 			e.printStackTrace();
 		}
 
-		dbConn.addMovie(title, runtime, genre, description, bytes);
+		dbConn.addMovieAndRelationship(title, runtime, genre, description, bytes, 1);
 	}
+	public void addMovieRelationship(int userId , int movieId){
+		dbConn.addRelationship(userId, movieId);
+	}
+	public List<Movie> getAllMovies(){
+		List<Movie> ls = new ArrayList<Movie>();
+			int id;
+			int runtime;
+			String title;
+			String description;
+			String genre;
+			try {
+				ResultSet rs = dbConn.getMoviesFromDatabase();
+				while (rs.next()) {
+				id = rs.getInt("id");
+				runtime = rs.getInt("runtime");
+				title = rs.getString("title");
+				description = rs.getString("description");
+				genre = rs.getString("genre");
+				Movie movie = new Movie(id, runtime, title, description, genre);
+				ls.add(movie);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		return ls;
+	}
+	public List<User> getAllUser(){
+		List<User> ls = new ArrayList<User>();
+			int id;
+			String userName;
+			String firstName;
+			String lastName;
+			try {
+				ResultSet rs = dbConn.getMoviesFromDatabase();
+				while (rs.next()) {
+				id = rs.getInt("id");
+				firstName = rs.getString("firstname");
+				userName = rs.getString("username");
+				lastName = rs.getString("lastname");
+				User user = new User(id, userName, firstName, lastName);
+				ls.add(user);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		return ls;
+	}
+
 }
+
+
