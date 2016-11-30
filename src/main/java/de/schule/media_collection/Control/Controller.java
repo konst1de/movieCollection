@@ -10,16 +10,16 @@ import java.util.List;
 
 import com.google.common.io.ByteStreams;
 
-import de.schule.media_collection.Data.DatabaseConnector;
+import de.schule.media_collection.Data.DataLayer;
 
 public class Controller {
 	List<Movie> movieList = new ArrayList<Movie>();
 	List<User> userList = new ArrayList<User>();
 	User currentUser;
-	DatabaseConnector dbConn;
-	public Controller() throws SQLException{
+	DataLayer dataConnection;
+	public Controller(boolean useSQL) throws SQLException{
 		try {
-			dbConn = new DatabaseConnector();
+			dataConnection = new DataLayer(useSQL);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,10 +39,10 @@ public class Controller {
 			e.printStackTrace();
 		}
 
-		dbConn.addMovieAndRelationship(title, runtime, genre, description, bytes, 1);
+		dataConnection.addMovieAndRelationship(title, runtime, genre, description, bytes, 1);
 	}
 	public void addMovieRelationship(int userId , int movieId){
-		dbConn.addRelationship(userId, movieId);
+		dataConnection.addRelationship(userId, movieId);
 	}
 	public List<Movie> getAllMovies(){
 		List<Movie> ls = new ArrayList<Movie>();
@@ -52,7 +52,7 @@ public class Controller {
 			String description;
 			String genre;
 			try {
-				ResultSet rs = dbConn.getMoviesFromDatabase();
+				ResultSet rs = dataConnection.getMoviesFromDatabase();
 				while (rs.next()) {
 				id = rs.getInt("id");
 				runtime = rs.getInt("runtime");
@@ -76,7 +76,7 @@ public class Controller {
 			String firstName;
 			String lastName;
 			try {
-				ResultSet rs = dbConn.getMoviesFromDatabase();
+				ResultSet rs = dataConnection.getMoviesFromDatabase();
 				while (rs.next()) {
 				id = rs.getInt("id");
 				firstName = rs.getString("firstname");

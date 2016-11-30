@@ -12,7 +12,7 @@ import java.util.Properties;
 
 import java.sql.PreparedStatement;
 
-public class DatabaseConnector 
+public class DataLayer 
 {
 	
 	// connection
@@ -23,11 +23,15 @@ public class DatabaseConnector
     private String username = "root";
     private String password = "";
 
-    public DatabaseConnector() throws SQLException{
-    	this.connection = this.getConnection();
+    public DataLayer(boolean useSQL) throws SQLException{
+    	if(useSQL){
+        	this.connection = this.getSQLConnection();
+    	}else{
+    		//.. optional save as xml? or csv?
+    	}
     }
 
-	private Connection getConnection() throws SQLException{
+	private Connection getSQLConnection() throws SQLException{
 		return DriverManager.getConnection(this.url, this.username, this.password);
 	}
 	public ResultSet getMoviesFromDatabase(){
