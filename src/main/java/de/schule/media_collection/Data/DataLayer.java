@@ -19,7 +19,7 @@ public class DataLayer
     private Connection connection = null;
 	private String serverName = "localhost";
 	private String dbName = "media_collection";
-	private String url = "jdbc:mysql://" + this.serverName + "/" + this.dbName; 
+	private String mySQLUrl = "jdbc:mysql://" + this.serverName + "/" + this.dbName; 
     private String username = "root";
     private String password = "";
 
@@ -32,7 +32,7 @@ public class DataLayer
     }
 
 	private Connection getSQLConnection() throws SQLException{
-		return DriverManager.getConnection(this.url, this.username, this.password);
+		return DriverManager.getConnection(this.mySQLUrl, this.username, this.password);
 	}
 	public ResultSet getMoviesFromDatabase(){
         String query = "select * from movies";
