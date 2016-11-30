@@ -3,7 +3,7 @@ package de.schule.media_collection;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import de.schule.media_collection.Control.Controller;
+import de.schule.media_collection.logic.Controller;
 import de.schule.media_collection.view.View;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

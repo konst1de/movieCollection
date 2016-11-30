@@ -1,4 +1,4 @@
-package de.schule.media_collection.Control;
+package de.schule.media_collection.logic;
 
 public class Movie{
 	private int id;

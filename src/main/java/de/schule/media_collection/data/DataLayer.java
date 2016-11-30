@@ -1,4 +1,4 @@
-package de.schule.media_collection.Data;
+package de.schule.media_collection.data;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
