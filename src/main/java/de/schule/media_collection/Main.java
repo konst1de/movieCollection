@@ -17,6 +17,6 @@ public class Main{
 	
 	public static void main(String[] args) throws SQLException {
 //		Application.launch(View.class, null);
-		Controller controller = new Controller(true);
+		Controller controller = new Controller(false);
 	}
 }

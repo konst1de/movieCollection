@@ -45,52 +45,10 @@ public class Controller {
 		dataConnector.addRelationship(userId, movieId);
 	}
 	public List<Movie> getAllMovies(){
-		List<Movie> ls = new ArrayList<Movie>();
-			int id;
-			int runtime;
-			String title;
-			String description;
-			String genre;
-			try {
-				ResultSet rs = dataConnector.getMoviesFromDatabase();
-				while (rs.next()) {
-				id = rs.getInt("id");
-				runtime = rs.getInt("runtime");
-				title = rs.getString("title");
-				description = rs.getString("description");
-				genre = rs.getString("genre");
-				Movie movie = new Movie(id, runtime, title, description, genre);
-				ls.add(movie);
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-		return ls;
+		return dataConnector.getMoviesFromDatabase();
 	}
-	public List<User> getAllUser(){
-		List<User> ls = new ArrayList<User>();
-			int id;
-			String userName;
-			String firstName;
-			String lastName;
-			try {
-				ResultSet rs = dataConnector.getMoviesFromDatabase();
-				while (rs.next()) {
-				id = rs.getInt("id");
-				firstName = rs.getString("firstname");
-				userName = rs.getString("username");
-				lastName = rs.getString("lastname");
-				User user = new User(id, userName, firstName, lastName);
-				ls.add(user);
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-		return ls;
+	public List<User> getAllUser(){	
+		return dataConnector.getUserFromDatabase();
 	}
 
 }
