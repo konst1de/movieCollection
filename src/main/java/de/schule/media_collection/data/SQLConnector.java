@@ -65,7 +65,7 @@ public class SQLConnector {
 		}
         return rs;
     }
-    public void addMovieAndRelationship(String title, int runtime, String genre, String description, byte[] cover, int userId){
+    public void addMovieAndRelationship(String title, int runtime, String genre, String description, int userId){
     	PreparedStatement statement;
 		String movieSql = "INSERT INTO movies (title, runtime, genre, description, cover) VALUES (?, ?, ?, ?, ?)";
 		try {
@@ -74,7 +74,7 @@ public class SQLConnector {
 			statement.setInt(2, runtime);
 			statement.setString(3, genre);
 			statement.setString(4, description);
-			statement.setBytes(5, cover);
+//			statement.setBytes(5, cover);
 			statement.executeUpdate();
 			
 			// get last inserted id to store the relationship

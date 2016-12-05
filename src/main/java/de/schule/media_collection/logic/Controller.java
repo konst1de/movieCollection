@@ -20,6 +20,13 @@ public class Controller {
 	public Controller(boolean useSQL) throws SQLException{
 		try {
 			dataConnector = new DataLayer(useSQL);
+			this.getAllMovies();
+			this.getAllUser();
+			this.printAllMovies();
+			
+			this.editMovie(1, "Der Hobbit", 140, "Fantasy", "TESTESTESTEST");
+			this.printAllMovies();
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,6 +56,22 @@ public class Controller {
 	}
 	public List<User> getAllUser(){	
 		return dataConnector.getUserFromDatabase();
+	}
+	public void editMovie(int movieId, String title, int runtime, String genre, String description){
+		dataConnector.editMovie(movieId, title, runtime, genre, description);
+	}
+	public void printAllMovies(){
+		movieList = getAllMovies();
+		for(int i=0; i< movieList.size(); i++){
+			System.out.println("-------");
+			Movie currentMovie = movieList.get(i);
+			System.out.print(currentMovie.getTitle() + " ");
+			System.out.print(currentMovie.getDescription()+ " ");
+			System.out.print(currentMovie.getRuntime());
+			System.out.println("-------");
+
+		}
+		
 	}
 
 }

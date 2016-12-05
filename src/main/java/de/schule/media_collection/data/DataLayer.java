@@ -65,6 +65,7 @@ public class DataLayer
 				e.printStackTrace();
 			}
 		}else{
+			movies = jsonConnector.getMovies();
 			if (movies != null) { 
 				for (int i=0;i<movies.size();i++){ 
 					JSONObject movieObj = (JSONObject) movies.get(i);
@@ -98,6 +99,7 @@ public class DataLayer
 				e.printStackTrace();
 			}
 		}else{
+			user = jsonConnector.getUser();
 			if (user != null) { 
 				for (int i=0;i<user.size();i++){ 
 				   	JSONObject userObject = (JSONObject) user.get(i);
@@ -114,9 +116,9 @@ public class DataLayer
 	}
 	public void addMovieAndRelationship(String title, int runtime, String genre, String description, byte[] cover, int userId){
 		if(useSQL){
-			sqlConnector.addMovieAndRelationship(title, runtime, genre, description, cover, userId);
+			sqlConnector.addMovieAndRelationship(title, runtime, genre, description, userId);
 		}else{
-			
+			jsonConnector.addMovieAndRelationship(title, runtime, genre, description, userId);
 		}
 
 	}
@@ -125,7 +127,14 @@ public class DataLayer
 		if(useSQL){
 			sqlConnector.addRelationship(userId, movieId);
 		}else{
-			
+			jsonConnector.addRelationship(userId, movieId);
+		}
+	}
+	public void editMovie(int movieId, String title, int runtime, String genre, String description){
+		if(useSQL){
+//			sqlConnector.addRelationship(userId, movieId);
+		}else{
+			jsonConnector.editMovie(movieId, title, runtime, genre, description);
 		}
 	}
     
