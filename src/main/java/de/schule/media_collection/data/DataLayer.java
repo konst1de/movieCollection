@@ -123,11 +123,11 @@ public class DataLayer
 
 	}
 	
-	public void addRelationship(int userId, int movieId){
+	public void addMovieToCollection(Movie movie, User user){
 		if(useSQL){
-			sqlConnector.addRelationship(userId, movieId);
+			sqlConnector.addMovieToCollection(user.getId(), movie.getId());
 		}else{
-			jsonConnector.addRelationship(userId, movieId);
+			jsonConnector.addMovieToCollection(user.getId(), movie.getId());
 		}
 	}
 	public void editMovie(Movie movie){
@@ -223,19 +223,31 @@ public class DataLayer
 
 	public User getUserById(int id) {
 		int userId = id;
-		String username = null;
-		String firstname = null;
-		String lastname = null;
+		String userName = null;
+		String firstName = null;
+		String lastName = null;
 		if(useSQL){
-			sqlConnector.getUserById(id);
+			ResultSet rs = sqlConnector.getUserById(id);
+			try {
+				if(rs.first()){
+					userId = rs.getInt("id");
+					firstName = rs.getString("firstname");
+					userName = rs.getString("username");
+					lastName = rs.getString("lastname");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}else{
 			JSONObject userObject = jsonConnector.getUserById(id);
 		   	userId = Integer.parseInt(userObject.get("id").toString());
-			username = (String) userObject.get("username");
-			firstname = (String) userObject.get("firstname");
-			lastname = (String) userObject.get("lastname");
+			userName = (String) userObject.get("username");
+			firstName = (String) userObject.get("firstname");
+			lastName = (String) userObject.get("lastname");
 		}
-		return new User(userId, username, firstname, lastname);
+		return new User(userId, userName, firstName, lastName);
 	}
 
 	public Movie getMovieById(int id) {
@@ -245,7 +257,19 @@ public class DataLayer
 		String description = null;
 		String genre = null;
 		if(useSQL){
-			sqlConnector.getMovieById(id);
+			ResultSet rs = sqlConnector.getMovieById(id);
+			try {
+				if(rs.first()){
+					movieId = rs.getInt("id");
+					runtime = rs.getInt("runtime");
+					title = rs.getString("title");
+					description = rs.getString("description");
+					genre = rs.getString("genre");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
 			JSONObject movieJSON = jsonConnector.getMovieById(id);
 			movieId = Integer.parseInt(movieJSON.get("id").toString());

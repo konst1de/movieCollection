@@ -84,7 +84,7 @@ public class JSONConnector {
 		movie.put("genre", genre);
 		movie.put("description", description);
 		movies.add(movie);
-		addRelationship(userId, lastMovieId);
+		addMovieToCollection(userId, lastMovieId);
 		lastMovieId++;
 	}
 	public JSONObject getMovieById(int movieId){
@@ -119,10 +119,12 @@ public class JSONConnector {
 	}
 	
 
-	public void addRelationship(int userId, int movieId) {
+	public void addMovieToCollection(int userId, int movieId) {
 		JSONObject userMovie = new JSONObject();
 		userMovie.put("userId", userId);
 		userMovie.put("userId", movieId);
+		userMovies.add(userMovie);
+		this.storeToFile();
 	}
 	private void storeToFile(){
 		try {

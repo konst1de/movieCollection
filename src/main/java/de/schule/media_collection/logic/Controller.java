@@ -13,8 +13,8 @@ import com.google.common.io.ByteStreams;
 import de.schule.media_collection.data.DataLayer;
 
 public class Controller {
-	List<Movie> movieList = new ArrayList<Movie>();
-	List<User> userList = new ArrayList<User>();
+
+
 	User currentUser;
 	DataLayer dataConnector;
 	public Controller(boolean useSQL) throws SQLException{
@@ -32,8 +32,8 @@ public class Controller {
 	public void addMovieToCollection(String title, int runtime, String genre, String description){
 		dataConnector.addMovieAndRelationship(title, runtime, genre, description, 1);
 	}
-	public void addMovieRelationship(int userId , int movieId){
-		dataConnector.addRelationship(userId, movieId);
+	public void addMovieToCollection(Movie movie, User user){
+		dataConnector.addMovieToCollection(movie, user);
 	}
 	public List<Movie> getAllMovies(){
 		return dataConnector.getMoviesFromDatabase();
@@ -63,7 +63,7 @@ public class Controller {
 		return dataConnector.getUserById(id);
 	}
 	public void printAllMovies(){
-		movieList = getAllMovies();
+		List<Movie> movieList = getAllMovies();
 		for(int i=0; i< movieList.size(); i++){
 			System.out.println("-------");
 			Movie currentMovie = movieList.get(i);

@@ -38,6 +38,22 @@ public class SQLConnector {
 		}
         return rs;
     }
+    public ResultSet getMovieById(int id){
+    	String query = "select * from movies WHERE id = ?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+			stmt = this.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			stmt.setInt(1, id);
+			stmt.setMaxRows(1); 
+
+	        rs = stmt.executeQuery(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return rs;
+    }
     
     public ResultSet getUser(){
     	String query = "select * from user";
@@ -65,11 +81,26 @@ public class SQLConnector {
 		}
         return rs;
     }
+    public ResultSet getUserById(int id) {
+    	String query = "select * from user WHERE id = ?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+			stmt = this.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			stmt.setInt(1, id);
+			stmt.setMaxRows(1); 
+	        rs = stmt.executeQuery(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return rs;
+	}
     public void addMovieAndRelationship(String title, int runtime, String genre, String description, int userId){
     	PreparedStatement statement;
 		String movieSql = "INSERT INTO movies (title, runtime, genre, description, cover) VALUES (?, ?, ?, ?, ?)";
 		try {
-			statement = connection.prepareStatement(movieSql, Statement.RETURN_GENERATED_KEYS);
+			statement = this.connection.prepareStatement(movieSql, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, title);
 			statement.setInt(2, runtime);
 			statement.setString(3, genre);
@@ -82,7 +113,7 @@ public class SQLConnector {
 		    	rs.next();
 		    int movieId = rs.getInt(1);
 		    if(userId != 0){
-				addRelationship(userId, movieId);
+				addMovieToCollection(userId, movieId);
 		    }
 		} catch (SQLException e) {
 			System.out.println(e);
@@ -90,7 +121,7 @@ public class SQLConnector {
 			e.printStackTrace();
 		}
     }
-    public void addRelationship(int userId, int movieId){
+    public void addMovieToCollection(int userId, int movieId){
     	PreparedStatement statement;
 		String relationShipSql = "INSERT INTO user_movies (user_id, movie_id) VALUES (?, ?)";
 		try {
@@ -125,14 +156,6 @@ public class SQLConnector {
 		
 	}
 
-	public void getMovieById(int id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void getUserById(int id) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 }
