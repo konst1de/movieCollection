@@ -21,24 +21,50 @@ public class JSONConnector {
 	public JSONConnector(){
 		// use json file to store data
 		JSONParser parser = new JSONParser();
-		Object obj = null;
-		try {
-			obj = parser.parse(new FileReader("/Users/konstantinvogel/Documents/workspace_schule/media_collection/storage.json"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		File jsonFile = new File("storage.json");
+		if(!jsonFile.exists()){
+			try {
+				jsonFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// if the file does not exist create one with the json structure and a default user
+			storageJSON = new JSONObject();
+			user = new JSONArray();
+			movies = new JSONArray();
+			userMovies = new JSONArray();
+			JSONObject defaultUser = new JSONObject();
+			defaultUser.put("id", 1);
+			defaultUser.put("username", "kv");
+			defaultUser.put("firstname", "Konstantin");
+			defaultUser.put("lastname", "Vogel");
+			user.add(defaultUser);
+			storageJSON.put("user", user);
+			storageJSON.put("movies", movies);
+			storageJSON.put("userMovies", userMovies);
+			this.storeToFile();
+		}else{
+			Object obj = null;
+			try {
+				obj = parser.parse(new FileReader("/Users/konstantinvogel/Documents/workspace_schule/media_collection/storage.json"));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			storageJSON = (JSONObject) obj;
+			user = (JSONArray) storageJSON.get("user");
+			movies = (JSONArray) storageJSON.get("movies");
+			userMovies = (JSONArray) storageJSON.get("userMovies");	
+			System.out.println(storageJSON.toJSONString());
 		}
-		storageJSON = (JSONObject) obj;
-		user = (JSONArray) storageJSON.get("user");
-		movies = (JSONArray) storageJSON.get("movies");
-		userMovies = (JSONArray) storageJSON.get("userMovies");	
-		 
 	}
 
 
