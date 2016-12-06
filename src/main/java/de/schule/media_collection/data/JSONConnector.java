@@ -74,7 +74,7 @@ public class JSONConnector {
 		}
 		return lastId;
 	}
-	public void addMovieAndRelationship(String title, int runtime, String genre, String description,
+	public void addMovieAndRelationship(String title, long runtime, String genre, String description,
 			int userId) {
 		JSONObject movie = new JSONObject();
 		int lastMovieId = getLastMovieId();
@@ -107,7 +107,7 @@ public class JSONConnector {
 		}
 		return null;
 	}
-	public void editMovie(int movieId, String title, int runtime, String genre, String description) {
+	public void editMovie(int movieId, String title, long runtime, String genre, String description) {
 		JSONObject movie = getMovieById(movieId);
 		int lastMovieId = getLastMovieId();
 		movie.put("id", lastMovieId);

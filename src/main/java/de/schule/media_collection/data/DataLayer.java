@@ -133,7 +133,7 @@ public class DataLayer
 	public void editMovie(Movie movie){
 		int movieId = movie.getId();
 		String title = movie.getTitle();
-		int runtime = movie.getRuntime();
+		long runtime = movie.getRuntime();
 		String genre = movie.getGenre();
 		String description = movie.getDescription();
 		if(useSQL){
