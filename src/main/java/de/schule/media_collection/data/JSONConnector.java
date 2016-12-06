@@ -97,6 +97,16 @@ public class JSONConnector {
 		}
 		return null;
 	}
+	public JSONObject getUserById(int userId){
+		for(int i=0; i < user.size(); i++){
+			JSONObject currentUser = (JSONObject) movies.get(i);
+			int currentId = Integer.parseInt(currentUser.get("id").toString());
+			if(currentId == userId){
+				return currentUser;
+			}
+		}
+		return null;
+	}
 	public void editMovie(int movieId, String title, int runtime, String genre, String description) {
 		JSONObject movie = getMovieById(movieId);
 		int lastMovieId = getLastMovieId();
@@ -131,5 +141,40 @@ public class JSONConnector {
 		}
 
     }
+	public JSONArray getUserOwnMovie(int movieId){
+		JSONArray userWhoOwnMovie = new JSONArray();
+		for(int i=0; i<userMovies.size();i++){
+			JSONObject currentUserMovie = (JSONObject) userMovies.get(i);
+			int currentMovieId = Integer.parseInt((currentUserMovie.get("movieId").toString()));
+			if(movieId == currentMovieId){
+				int currentUserId = Integer.parseInt((currentUserMovie.get("userId").toString()));
+				userWhoOwnMovie.add(this.getUserById(currentUserId));
+			}
+		}
+		return userWhoOwnMovie;
+	}
+	public JSONArray getMoviesOwnedByUser(int userId){
+		JSONArray moviesOwnedByUser = new JSONArray();
+		for(int i=0; i<userMovies.size();i++){
+			JSONObject currentUserMovie = (JSONObject) userMovies.get(i);
+			int currentUserId = Integer.parseInt((currentUserMovie.get("movieId").toString()));
+			if(userId == currentUserId){
+				int currentMovieId = Integer.parseInt((currentUserMovie.get("movieId").toString()));
+				moviesOwnedByUser.add(this.getMovieById(currentMovieId));
+			}
+		}
+		return moviesOwnedByUser;
+	}
+	public void removeMovieFromUser(int movieId, int userId){
+		for(int i=0; i < userMovies.size();i++){
+			JSONObject currentUserMovie = (JSONObject) userMovies.get(i);
+			int currentUserId = Integer.parseInt(currentUserMovie.get("userId").toString());
+			int currentMovieId = Integer.parseInt(currentUserMovie.get("movieId").toString());
+			if(currentUserId == userId && currentMovieId == movieId){
+				userMovies.remove(i);
+			}
+			this.storeToFile();
+		}
+	}
 
 }

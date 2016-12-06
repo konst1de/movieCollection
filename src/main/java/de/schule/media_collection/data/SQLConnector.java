@@ -105,4 +105,9 @@ public class SQLConnector {
 		}
     }
 
+	public void editMovie(int movieId, String title, int runtime, String genre, String description) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

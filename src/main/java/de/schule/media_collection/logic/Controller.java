@@ -20,33 +20,20 @@ public class Controller {
 	public Controller(boolean useSQL) throws SQLException{
 		try {
 			dataConnector = new DataLayer(useSQL);
-			this.getAllMovies();
-			this.getAllUser();
-			this.printAllMovies();
-			
-			this.editMovie(1, "Der Hobbit", 140, "Fantasy", "TESTESTESTEST");
-			this.printAllMovies();
+
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.movieList = this.getAllMovies();
+		this.printAllMovies();
+		this.editMovie(1, "Der Hobbit", 140, "Fantasy", "TESTESTESTEST");
+		this.printAllMovies();
 
 	}
 	
 	public void addMovieToCollection(String title, int runtime, String genre, String description){
-		byte[] bytes = null;
-		InputStream is;
-		try {
-			is = new FileInputStream("/Users/konstantinvogel/Documents/workspace_schule/media_collection/cover.jpg");
-			bytes = ByteStreams.toByteArray(is);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		dataConnector.addMovieAndRelationship(title, runtime, genre, description, bytes, 1);
+		dataConnector.addMovieAndRelationship(title, runtime, genre, description, 1);
 	}
 	public void addMovieRelationship(int userId , int movieId){
 		dataConnector.addRelationship(userId, movieId);
@@ -69,9 +56,7 @@ public class Controller {
 			System.out.print(currentMovie.getDescription()+ " ");
 			System.out.print(currentMovie.getRuntime());
 			System.out.println("-------");
-
 		}
-		
 	}
 
 }
