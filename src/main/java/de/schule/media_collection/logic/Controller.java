@@ -27,9 +27,6 @@ public class Controller {
 			e.printStackTrace();
 		}
 		this.printAllMovies();
-		this.editMovie(1, "Der Hobbit", 140, "Fantasy", "TESTESTESTEST");
-		this.printAllMovies();
-
 	}
 	
 	public void addMovieToCollection(String title, int runtime, String genre, String description){
@@ -44,8 +41,26 @@ public class Controller {
 	public List<User> getAllUser(){	
 		return dataConnector.getUserFromDatabase();
 	}
-	public void editMovie(int movieId, String title, int runtime, String genre, String description){
-		dataConnector.editMovie(movieId, title, runtime, genre, description);
+	public List<User> getMovieById(){	
+		return dataConnector.getUserFromDatabase();
+	}
+	public void editMovie(Movie movie){
+		dataConnector.editMovie(movie);
+	}
+	public void removeMovieFromCollection(Movie movie, User user){
+		dataConnector.removeMovieFromCollection(movie, user);
+	}
+	public List<Movie> getAllOwnedMovies(User user){
+		return dataConnector.getAllOwnedMovies(user);
+	}
+	public List<User> getOwnerForMovie(Movie movie){
+		return dataConnector.getUserWhoOwnMovie(movie);
+	}
+	public Movie getMovieById(int id){
+		return dataConnector.getMovieById(id);
+	}
+	public User getUserById(int id){
+		return dataConnector.getUserById(id);
 	}
 	public void printAllMovies(){
 		movieList = getAllMovies();

@@ -130,32 +130,36 @@ public class DataLayer
 			jsonConnector.addRelationship(userId, movieId);
 		}
 	}
-	public void editMovie(int movieId, String title, int runtime, String genre, String description){
+	public void editMovie(Movie movie){
+		int movieId = movie.getId();
+		String title = movie.getTitle();
+		int runtime = movie.getRuntime();
+		String genre = movie.getGenre();
+		String description = movie.getDescription();
 		if(useSQL){
 			sqlConnector.editMovie(movieId, title, runtime, genre, description);
 		}else{
 			jsonConnector.editMovie(movieId, title, runtime, genre, description);
 		}
 	}
-    public List<User> getUserWhoOwnMovie(int movieId){
+    public List<User> getUserWhoOwnMovie(Movie movie){
     	List<User> ownerList = new ArrayList<User>();
     	if(useSQL){
-//	        ResultSet rs = sqlConnector.getUserOwnMovie(movieId);
-//			try {
-//				while (rs.next()) {
-//					int id = rs.getInt("id");
-//					String firstName = rs.getString("firstname");
-//					String userName = rs.getString("username");
-//					String lastName = rs.getString("lastname");
-//					User user = new User(id, userName, firstName, lastName);
-//					ownerList.add(user);
-//				}
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+	        ResultSet rs = sqlConnector.getUserOwnMovie(movie.getId());
+			try {
+				while (rs.next()) {
+					int id = rs.getInt("id");
+					String firstName = rs.getString("firstname");
+					String userName = rs.getString("username");
+					String lastName = rs.getString("lastname");
+					ownerList.add(new User(id, userName, firstName, lastName));
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
-			user = jsonConnector.getUserOwnMovie(movieId);
+			user = jsonConnector.getUserOwnMovie(movie.getId());
 			if (user != null) { 
 				for (int i=0;i<user.size();i++){ 
 				   	JSONObject userObject = (JSONObject) user.get(i);
@@ -163,11 +167,93 @@ public class DataLayer
 					String username = (String) userObject.get("username");
 					String firstname = (String) userObject.get("firstname");
 					String lastname = (String) userObject.get("lastname");
-					User user = new User(id, username, firstname, lastname);
-					ownerList.add(user);		
+					ownerList.add(new User(id, username, firstname, lastname));		
+
 				} 
 			} 
 		}
     	return ownerList;
     }
+
+	public List<Movie> getAllOwnedMovies(User user) {
+		int userId = user.getId();
+		// TODO Auto-generated method stub
+		List<Movie> movieList = new ArrayList<Movie>();
+    	if(useSQL){
+	        ResultSet rs = sqlConnector.getMoviesOwnedByUser(userId);
+			try {
+				while (rs.next()) {
+					int id = rs.getInt("id");
+					int runtime = rs.getInt("runtime");
+					String title = rs.getString("title");
+					String description = rs.getString("description");
+					String genre = rs.getString("genre");
+					movieList.add(new Movie(id, runtime, title, genre, description));
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			movies = jsonConnector.getMoviesOwnedByUser(userId);
+			if (movies != null) { 
+				for (int i=0;i<movies.size();i++){ 
+				   	JSONObject movieJSON= (JSONObject) movies.get(i);
+				   	int id = Integer.parseInt(movieJSON.get("id").toString());
+				   	int runtime = Integer.parseInt(movieJSON.get("id").toString());
+					String title = (String) movieJSON.get("title");
+					String description = (String) movieJSON.get("description");
+					String genre = (String) movieJSON.get("genre");
+					movieList.add(new Movie(id, runtime, title, genre, description));
+				} 
+			} 
+		}
+    	return movieList;
+	}
+
+	public void removeMovieFromCollection(Movie movie, User user) {
+		// TODO Auto-generated method stub
+		
+		if(useSQL){
+			sqlConnector.removeMovieFromUser(movie.getId(), user.getId());
+		}else{
+			jsonConnector.removeMovieFromUser(movie.getId(), user.getId());
+		}
+	}
+
+	public User getUserById(int id) {
+		int userId = id;
+		String username = null;
+		String firstname = null;
+		String lastname = null;
+		if(useSQL){
+			sqlConnector.getUserById(id);
+		}else{
+			JSONObject userObject = jsonConnector.getUserById(id);
+		   	userId = Integer.parseInt(userObject.get("id").toString());
+			username = (String) userObject.get("username");
+			firstname = (String) userObject.get("firstname");
+			lastname = (String) userObject.get("lastname");
+		}
+		return new User(userId, username, firstname, lastname);
+	}
+
+	public Movie getMovieById(int id) {
+		int movieId = id;
+		int runtime = 0;
+		String title = null;
+		String description = null;
+		String genre = null;
+		if(useSQL){
+			sqlConnector.getMovieById(id);
+		}else{
+			JSONObject movieJSON = jsonConnector.getMovieById(id);
+			movieId = Integer.parseInt(movieJSON.get("id").toString());
+		   	runtime = Integer.parseInt(movieJSON.get("id").toString());
+			title = (String) movieJSON.get("title");
+			description = (String) movieJSON.get("description");
+			genre = (String) movieJSON.get("genre");
+		}
+		return new Movie(movieId, runtime, title, genre, description);
+	}
 }

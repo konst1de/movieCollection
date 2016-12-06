@@ -110,4 +110,29 @@ public class SQLConnector {
 		
 	}
 
+	public ResultSet getUserOwnMovie(int movieId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResultSet getMoviesOwnedByUser(int userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void removeMovieFromUser(int id, int id2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void getMovieById(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void getUserById(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
