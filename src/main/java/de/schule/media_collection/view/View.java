@@ -3,6 +3,7 @@ package de.schule.media_collection.view;
 import java.io.IOException;
 
 import de.schule.media_collection.logic.Movie;
+import de.schule.media_collection.logic.User;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,26 +14,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class MovieView extends Application {
+public class View extends Application {
 
 	private Stage primaryStage;
 	private BorderPane rootLayout;
+	private User user;
 
-	private ObservableList<Movie> movieData = FXCollections.observableArrayList();
-
-	public MovieView() {
-		movieData.add(new Movie(1, 3, "Herr der Ringe 1", "fantasy", "Bla"));
-		movieData.add(new Movie(2, 4, "Herr der Ringe 2", "fantasy", "Bla"));
-		movieData.add(new Movie(3, 3, "Herr der Ringe 3", "fantasy", "Bla"));
-
+	public View() {
 	}
 	
 	public Stage getPrimaryStage() {
 		return primaryStage;
-	}
-
-	public ObservableList<Movie> getMovieData() {
-		return movieData;
 	}
 	
 	private void initRootLayout() {
@@ -40,7 +32,7 @@ public class MovieView extends Application {
 		try {
 
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MovieView.class.getResource("RootLayout.fxml"));
+			loader.setLocation(View.class.getResource("RootLayout.fxml"));
 			rootLayout = (BorderPane) loader.load();
 
 			Scene scene = new Scene(rootLayout);
@@ -58,7 +50,7 @@ public class MovieView extends Application {
 	private void showMovieOverview() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MovieView.class.getResource("MovieOverview.fxml"));
+			loader.setLocation(View.class.getResource("MovieOverview.fxml"));
 			AnchorPane movieOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(movieOverview);
@@ -75,7 +67,7 @@ public class MovieView extends Application {
 	public boolean showMovieEditDialog(Movie movie) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MovieView.class.getResource("MovieEditDialog.fxml"));
+			loader.setLocation(View.class.getResource("MovieEditDialog.fxml"));
 			AnchorPane page = (AnchorPane) loader.load();
 			
 			Stage dialogStage = new Stage();
@@ -98,18 +90,44 @@ public class MovieView extends Application {
 		}
 	}
 	
+	public User showUserLoginDialog() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(View.class.getResource("UserLoginDialog.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+			
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("User Login");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+			
+			UserSelectionController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			
+			dialogStage.showAndWait();
+			
+			return controller.getUser();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("MovieOverview");
 
 		initRootLayout();
-
-		showMovieOverview();
-
-	}
-
-	public static void main(String[] args) {
-		launch(args);
+		
+		//user = showUserLoginDialog();
+		
+		//if (user != null) {
+			showMovieOverview();
+		//}
 	}
 }

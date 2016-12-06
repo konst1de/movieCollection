@@ -1,19 +1,24 @@
 package de.schule.media_collection.view;
 
 import de.schule.media_collection.logic.Movie;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 public class MovieViewController {
 
 	@FXML
-	private TableView<Movie> movieTable;
-
+	private TextField filterField;
+	
 	@FXML
-	private TableColumn<Movie, Integer> idColumn;
+	private TableView<Movie> movieTable;
 
 	@FXML
 	private TableColumn<Movie, String> titleColumn;
@@ -27,24 +32,55 @@ public class MovieViewController {
 	@FXML
 	private TableColumn<Movie, String> descriptionColumn;
 
-	private MovieView view;
+	private View view;
+	
+	private ObservableList<Movie> movieData = FXCollections.observableArrayList();
 
 	public MovieViewController() {
+		movieData.add(new Movie(1, 3, "Herr der Ringe 1", "fantasy", "Bla"));
+		movieData.add(new Movie(2, 4, "Herr der Ringe 2", "fantasy", "Bla"));
+		movieData.add(new Movie(3, 3, "Herr der Ringe 3", "fantasy", "Bla"));
+	}
+	
+	public ObservableList<Movie> getMovieData() {
+		return movieData;
 	}
 
 	@FXML
 	private void initialize() {
-		idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
+		movieTable.setItems(movieData);
+		
 		titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
 		runtimeColumn.setCellValueFactory(cellData -> cellData.getValue().runtimeProperty().asObject());
 		genreColumn.setCellValueFactory(cellData -> cellData.getValue().genreProperty());
 		descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
+				
+		FilteredList<Movie> filteredData = new FilteredList<>(movieTable.getItems(), e -> true);
+		
+		filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredData.setPredicate(Movie -> {			
+				if (newValue == null || newValue.isEmpty()) {
+	             return true;
+				}
+			 
+				String lowerCaseFilter = newValue.toLowerCase();
+				
+				if (Movie.getTitle().toLowerCase().contains(lowerCaseFilter)) {
+	                return true;
+				}
+	            return false;
+	        });
+		});
+		
+		SortedList<Movie> sortedData = new SortedList<>(filteredData);
+		
+		sortedData.comparatorProperty().bind(movieTable.comparatorProperty());
+		
+		movieTable.setItems(sortedData);
 	}
 	
-	public void setView(MovieView view) {
+	public void setView(View view) {
 		this.view = view;
-		
-		movieTable.setItems(view.getMovieData());
 	}
 	
 	@FXML
@@ -52,7 +88,7 @@ public class MovieViewController {
 		Movie tempMovie = new Movie();
 		boolean okClicked = view.showMovieEditDialog(tempMovie);
 		if (okClicked) {
-			view.getMovieData().add(tempMovie);
+			movieData.add(tempMovie);
 		}
 	}
 	
