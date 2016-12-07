@@ -1,7 +1,10 @@
 package de.schule.media_collection.view;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
+import de.schule.media_collection.logic.Controller;
 import de.schule.media_collection.logic.Movie;
 import de.schule.media_collection.logic.User;
 import javafx.application.Application;
@@ -13,12 +16,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class View extends Application {
 
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 	private User user;
+	private List<Movie> movieList;
 
 	public View() {
 	}
@@ -51,12 +56,26 @@ public class View extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(View.class.getResource("MovieOverview.fxml"));
+			
+			loader.setControllerFactory(new Callback<Class<?>, Object>() {				
+				@Override
+				public Object call(Class<?> controllerClass) {
+					if (controllerClass == MovieViewController.class) {
+						MovieViewController controller = new MovieViewController(movieList, View.this);
+						return controller;
+					} else {
+						try {
+							return controllerClass.newInstance();
+						} catch (Exception  e) {
+							e.printStackTrace();
+						}
+					}
+					return controllerClass;
+				}
+			});
 			AnchorPane movieOverview = (AnchorPane) loader.load();
 
 			rootLayout.setCenter(movieOverview);
-			
-			MovieViewController controller = loader.getController();
-			controller.setView(this);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -123,6 +142,13 @@ public class View extends Application {
 		this.primaryStage.setTitle("MovieOverview");
 
 		initRootLayout();
+		
+		try {
+			Controller controller = new Controller(true);
+			movieList = controller.getAllMovies();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		//user = showUserLoginDialog();
 		

@@ -1,5 +1,8 @@
 package de.schule.media_collection.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.schule.media_collection.logic.Movie;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,21 +37,22 @@ public class MovieViewController {
 
 	private View view;
 	
-	private ObservableList<Movie> movieData = FXCollections.observableArrayList();
+	private List<Movie> movieList;
+	private ObservableList<Movie> masterData;
 
-	public MovieViewController() {
-		movieData.add(new Movie(1, 3, "Herr der Ringe 1", "fantasy", "Bla"));
-		movieData.add(new Movie(2, 4, "Herr der Ringe 2", "fantasy", "Bla"));
-		movieData.add(new Movie(3, 3, "Herr der Ringe 3", "fantasy", "Bla"));
+	public MovieViewController(List<Movie> movieList, View view) {
+		this.movieList = new ArrayList<Movie>(movieList);
+		this.masterData = FXCollections.observableArrayList(this.movieList);
+		this.view = view;
 	}
 	
 	public ObservableList<Movie> getMovieData() {
-		return movieData;
+		return masterData;
 	}
 
 	@FXML
 	private void initialize() {
-		movieTable.setItems(movieData);
+		movieTable.setItems(masterData);
 		
 		titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
 		runtimeColumn.setCellValueFactory(cellData -> cellData.getValue().runtimeProperty().asObject());
@@ -79,16 +83,12 @@ public class MovieViewController {
 		movieTable.setItems(sortedData);
 	}
 	
-	public void setView(View view) {
-		this.view = view;
-	}
-	
 	@FXML
 	private void handleNewMovie() {
 		Movie tempMovie = new Movie();
 		boolean okClicked = view.showMovieEditDialog(tempMovie);
 		if (okClicked) {
-			movieData.add(tempMovie);
+			masterData.add(tempMovie);
 		}
 	}
 	
