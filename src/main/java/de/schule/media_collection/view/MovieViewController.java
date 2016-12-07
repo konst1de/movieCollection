@@ -93,7 +93,7 @@ public class MovieViewController {
 	}
 	
 	@FXML
-	private void handleEditPerson () {
+	private void handleEditMovie () {
 		Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
 		if (selectedMovie != null) {
 			boolean okClicked = view.showMovieEditDialog(selectedMovie);
@@ -109,7 +109,7 @@ public class MovieViewController {
 	}
 	
 	@FXML
-	private void handleDeletePerson() {
+	private void handleDeleteMovie() {
 		int selectedIndex = movieTable.getSelectionModel().getSelectedIndex();
 		if (selectedIndex >= 0) {
 			movieTable.getItems().remove(selectedIndex);

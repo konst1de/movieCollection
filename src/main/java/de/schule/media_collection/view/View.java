@@ -3,15 +3,17 @@ package de.schule.media_collection.view;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import de.schule.media_collection.logic.Controller;
 import de.schule.media_collection.logic.Movie;
 import de.schule.media_collection.logic.User;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -22,8 +24,11 @@ public class View extends Application {
 
 	private Stage primaryStage;
 	private BorderPane rootLayout;
-	private User user;
 	private List<Movie> movieList;
+	private List<Movie> userMovieList;
+	private List<User> userList;
+	private User selectedUser;
+	private Controller logicController;
 
 	public View() {
 	}
@@ -109,51 +114,84 @@ public class View extends Application {
 		}
 	}
 	
-	public User showUserLoginDialog() {
+	public void showUserLoginDialog() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
+			
 			loader.setLocation(View.class.getResource("UserLoginDialog.fxml"));
+			loader.setControllerFactory(new Callback<Class<?>, Object>() {				
+				@Override
+				public Object call(Class<?> controllerClass) {
+					if (controllerClass == UserLoginController.class) {
+						UserLoginController controller = new UserLoginController(userList);
+						return controller;
+					} else {
+						try {
+							return controllerClass.newInstance();
+						} catch (Exception  e) {
+							e.printStackTrace();
+						}
+					}
+					return controllerClass;
+				}
+			});
+
 			AnchorPane page = (AnchorPane) loader.load();
+			UserLoginController controller = loader.getController();
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("User Login");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.initOwner(primaryStage);
+			controller.setDialogStage(dialogStage);
 			
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
 			
-			UserSelectionController controller = loader.getController();
-			controller.setDialogStage(dialogStage);
-			
 			dialogStage.showAndWait();
 			
-			return controller.getUser();
+			if (controller.isSignInClicked() == true) {
+				selectedUser = controller.getSelectedUser();
+			} else {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("User Selection");
+				alert.setHeaderText("Error!");
+				alert.setContentText("Do you realy want to close this Application?");
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK){
+				   return;
+				} else {
+					showUserLoginDialog();
+				}
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
-		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle("MovieOverview");
-
-		initRootLayout();
-		
 		try {
-			Controller controller = new Controller(true);
-			movieList = controller.getAllMovies();
+			 logicController = new Controller(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		//user = showUserLoginDialog();
+		this.primaryStage = primaryStage;
+		this.primaryStage.setTitle("MovieOverview");
 		
-		//if (user != null) {
+		userList = logicController.getAllUser();
+		
+		showUserLoginDialog();
+		
+		if (selectedUser != null) {
+			initRootLayout();
+			movieList = logicController.getAllMovies();			
 			showMovieOverview();
-		//}
+		} else {
+			System.exit(0);
+		}
 	}
 }

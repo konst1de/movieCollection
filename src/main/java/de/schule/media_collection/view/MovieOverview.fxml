@@ -20,8 +20,8 @@
                         <MenuButton layoutX="10.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" popupSide="TOP" prefHeight="32.0" prefWidth="125.0" text="Einstellungen" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#handleNewMovie" text="Add" />
-                            <MenuItem mnemonicParsing="false" onAction="#handleEditPerson" text="Edit" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleDeletePerson" text="Delete" />
+                            <MenuItem mnemonicParsing="false" onAction="#handleDeleteMovie" text="Edit" />
+                              <MenuItem mnemonicParsing="false" onAction="#handleDeleteMovie" text="Delete" />
                           </items>
                         </MenuButton>
                         <TableView fx:id="movieTable" layoutX="13.0" layoutY="59.0" prefHeight="618.0" prefWidth="1180.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="60.0">
