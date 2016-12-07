@@ -17,7 +17,7 @@ public class Tui {
 	private User currentUser;
 
 	public Tui() throws SQLException {
-		controller = new Controller(true);
+		controller = new Controller(false);
 		myScanner = new Scanner(System.in);
 	}
 
@@ -200,7 +200,7 @@ public class Tui {
 		System.out.println("           Alle Filme auflisten          ");
 		System.out.println("=========================================");
 		List<Movie> allMovies = controller.getAllMovies();
-		System.out.println("ID --- TITEL --- GENRE --- LAUFZEIT --- BESCHREIBUNG");
+		System.out.println("ID --- TITEL --- GENRE --- ERSCHEINUNGSJAHR--- LAUFZEIT --- BESCHREIBUNG");
 		for (int i = 0; i < allMovies.size(); i++) {
 			Movie currentMovie = allMovies.get(i);
 			int id = currentMovie.getId();
@@ -208,7 +208,8 @@ public class Tui {
 			String title = currentMovie.getTitle();
 			String genre = currentMovie.getGenre();
 			String description = currentMovie.getDescription();
-			System.out.println(id + " --- " + title + " --- " + genre + " --- " + runtime + " --- " + description);
+			LocalDate releaseDate = currentMovie.getReleaseDate();
+			System.out.println(id + " --- " + title + " --- " + genre + " --- " + releaseDate + " --- " + runtime + " --- " + description);
 		}
 
 	}

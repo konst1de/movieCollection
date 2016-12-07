@@ -42,14 +42,11 @@ public class SQLConnector {
         return rs;
     }
     public ResultSet getMovieById(int id){
-    	String query = "select * from movies WHERE id = ?";
+    	String query = "select * from movies WHERE id = " + id;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
 			stmt = this.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-			stmt.setInt(1, id);
-			stmt.setMaxRows(1); 
-
 	        rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

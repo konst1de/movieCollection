@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,8 @@ public class DataLayer
     private JSONArray userMovies = null;
     private SQLConnector sqlConnector;
     private JSONConnector jsonConnector;
+    private final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     public DataLayer(boolean useSQL) throws SQLException{
     	this.useSQL = useSQL;
     	if(useSQL){
@@ -59,7 +62,8 @@ public class DataLayer
 					String title = rs.getString("title");
 					String description = rs.getString("description");
 					String genre = rs.getString("genre");
-					Movie movie = new Movie(id, runtime, title, genre, description);
+					LocalDate releaseDate = rs.getDate("release_date") != null ? rs.getDate("release_date").toLocalDate() : null;
+					Movie movie = new Movie(id, runtime, title, genre, description, releaseDate);
 					ls.add(movie);
 				}
 			} catch (SQLException e) {
@@ -76,7 +80,9 @@ public class DataLayer
 					String title = (String) movieObj.get("title");
 					String description = (String) movieObj.get("description");
 					String genre = (String) movieObj.get("genre");
-					Movie movie = new Movie(id, runtime, title, description, genre);
+					LocalDate releaseDate = movieObj.get("releaseDate") != null ?  LocalDate.parse((String) movieObj.get("releaseDate"), DATE_FORMAT) : null; 
+
+					Movie movie = new Movie(id, runtime, title, description, genre, releaseDate);
 					ls.add(movie);
 				} 
 			} 
@@ -190,7 +196,8 @@ public class DataLayer
 					String title = rs.getString("title");
 					String description = rs.getString("description");
 					String genre = rs.getString("genre");
-					movieList.add(new Movie(id, runtime, title, genre, description));
+					LocalDate releaseDate = rs.getDate("release_date") != null ? rs.getDate("release_date").toLocalDate() : null;
+					movieList.add(new Movie(id, runtime, title, genre, description, releaseDate));
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -206,7 +213,8 @@ public class DataLayer
 					String title = (String) movieJSON.get("title");
 					String description = (String) movieJSON.get("description");
 					String genre = (String) movieJSON.get("genre");
-					movieList.add(new Movie(id, runtime, title, genre, description));
+					LocalDate releaseDate = movieJSON.get("releaseDate") != null ?  LocalDate.parse((String) movieJSON.get("releaseDate"), DATE_FORMAT) : null; 
+					movieList.add(new Movie(id, runtime, title, genre, description, releaseDate));
 				} 
 			} 
 		}
@@ -261,6 +269,7 @@ public class DataLayer
 		String title = null;
 		String description = null;
 		String genre = null;
+		LocalDate releaseDate = null;
 		if(useSQL){
 			ResultSet rs = sqlConnector.getMovieById(id);
 			try {
@@ -270,6 +279,7 @@ public class DataLayer
 					title = rs.getString("title");
 					description = rs.getString("description");
 					genre = rs.getString("genre");
+					releaseDate = rs.getDate("release_date") != null ? rs.getDate("release_date").toLocalDate() : null;
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -282,7 +292,8 @@ public class DataLayer
 			title = (String) movieJSON.get("title");
 			description = (String) movieJSON.get("description");
 			genre = (String) movieJSON.get("genre");
+			releaseDate = movieJSON.get("releaseDate") != null ?  LocalDate.parse((String) movieJSON.get("releaseDate"), DATE_FORMAT) : null; 
 		}
-		return new Movie(movieId, runtime, title, genre, description);
+		return new Movie(movieId, runtime, title, genre, description, releaseDate);
 	}
 }

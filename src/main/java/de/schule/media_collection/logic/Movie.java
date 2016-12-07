@@ -1,5 +1,7 @@
 package de.schule.media_collection.logic;
 
+import java.time.LocalDate;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -14,17 +16,18 @@ public class Movie {
 	private final StringProperty title;
 	private final StringProperty genre;
 	private final StringProperty description;
-	
+	private LocalDate releaseDate;
 	public Movie() {
-		this( 0, 0, null, null, null);
+		this( 0, 0, null, null, null, null);
 	}
 
-	public Movie(int id, int runtime, String title, String genre, String description) {
+	public Movie(int id, int runtime, String title, String genre, String description, LocalDate releaseDate) {
 		this.id = new SimpleIntegerProperty(id);
 		this.title = new SimpleStringProperty(title);
 		this.runtime = new SimpleLongProperty(runtime);
 		this.genre = new SimpleStringProperty(genre);
 		this.description = new SimpleStringProperty(description);
+		this.releaseDate = releaseDate;
 	}
 	
 	public IntegerProperty idProperty() {
@@ -96,6 +99,10 @@ public class Movie {
 
 	public void setDescription(final String description) {
 		this.descriptionProperty().set(description);
+	}
+
+	public LocalDate getReleaseDate() {
+		return this.releaseDate;
 	}
 	
 }
