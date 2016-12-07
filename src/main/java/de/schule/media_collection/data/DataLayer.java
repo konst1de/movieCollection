@@ -9,7 +9,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -114,11 +116,11 @@ public class DataLayer
 		}
 		return ls;
 	}
-	public void addMovieAndRelationship(String title, int runtime, String genre, String description, int userId){
+	public void addMovieAndRelationship(String title, int runtime, String genre, String description, int userId, LocalDate date){
 		if(useSQL){
-			sqlConnector.addMovieAndRelationship(title, runtime, genre, description, userId);
+			sqlConnector.addMovieAndRelationship(title, runtime, genre, description, userId, date);
 		}else{
-			jsonConnector.addMovieAndRelationship(title, runtime, genre, description, userId);
+			jsonConnector.addMovieAndRelationship(title, runtime, genre, description, userId, date);
 		}
 
 	}
@@ -246,6 +248,9 @@ public class DataLayer
 			userName = (String) userObject.get("username");
 			firstName = (String) userObject.get("firstname");
 			lastName = (String) userObject.get("lastname");
+		}
+		if(userName == null){
+			return null;
 		}
 		return new User(userId, userName, firstName, lastName);
 	}

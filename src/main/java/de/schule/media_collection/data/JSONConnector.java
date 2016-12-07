@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
@@ -98,7 +100,7 @@ public class JSONConnector {
 		return lastId;
 	}
 	public void addMovieAndRelationship(String title, long runtime, String genre, String description,
-			int userId) {
+			int userId, LocalDate date) {
 		JSONObject movie = new JSONObject();
 		int lastMovieId = getLastMovieId();
 		movie.put("id", lastMovieId);
@@ -106,6 +108,7 @@ public class JSONConnector {
 		movie.put("runtime", runtime);
 		movie.put("genre", genre);
 		movie.put("description", description);
+		movie.put("date", date.toString());
 		movies.add(movie);
 		addMovieToCollection(userId, lastMovieId);
 		lastMovieId++;

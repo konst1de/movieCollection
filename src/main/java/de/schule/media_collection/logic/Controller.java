@@ -3,8 +3,10 @@ package de.schule.media_collection.logic;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +28,13 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.printAllMovies();
 	}
 	
-	public void addMovieToCollection(String title, int runtime, String genre, String description){
-		dataConnector.addMovieAndRelationship(title, runtime, genre, description, 1);
+	public void addMovieToCollection(String title, int runtime, String genre, String description, int userId, LocalDate date){
+		dataConnector.addMovieAndRelationship(title, runtime, genre, description, userId, date);
 	}
-	public void addMovieToCollection(Movie movie, User user){
+	public void addExistingMovieToCollection(int movieId, User user){
+		Movie movie = dataConnector.getMovieById(movieId);
 		dataConnector.addMovieToCollection(movie, user);
 	}
 	public List<Movie> getAllMovies(){
@@ -47,8 +49,9 @@ public class Controller {
 	public void editMovie(Movie movie){
 		dataConnector.editMovie(movie);
 	}
-	public void removeMovieFromCollection(Movie movie, User user){
-		dataConnector.removeMovieFromCollection(movie, user);
+	public void removeMovieFromCollection(int movieId, User user){
+		Movie movieToRemove = this.getMovieById(movieId);
+		dataConnector.removeMovieFromCollection(movieToRemove, user);
 	}
 	public List<Movie> getAllOwnedMovies(User user){
 		return dataConnector.getAllOwnedMovies(user);
@@ -62,18 +65,6 @@ public class Controller {
 	public User getUserById(int id){
 		return dataConnector.getUserById(id);
 	}
-	public void printAllMovies(){
-		List<Movie> movieList = getAllMovies();
-		for(int i=0; i< movieList.size(); i++){
-			System.out.println("-------");
-			Movie currentMovie = movieList.get(i);
-			System.out.print(currentMovie.getTitle() + " ");
-			System.out.print(currentMovie.getDescription()+ " ");
-			System.out.print(currentMovie.getRuntime());
-			System.out.println("-------");
-		}
-	}
-
 }
 
 

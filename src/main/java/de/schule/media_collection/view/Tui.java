@@ -2,139 +2,279 @@ package de.schule.media_collection.view;
 
 import de.schule.media_collection.logic.*;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
-
 
 public class Tui {
 
 	private Controller controller;
 	private Scanner myScanner;
+	private User currentUser;
 
-	public Tui() throws SQLException
-	{
+	public Tui() throws SQLException {
 		controller = new Controller(true);
-	    myScanner = new Scanner(System.in);
+		myScanner = new Scanner(System.in);
 	}
 
-	public void menu()
-	{
-	    int command;
-	    boolean running = true;
+	public void menu() {
+		String command;
+		boolean running = true;
 
-	    while(running)
-	    {
-	        displayMenu();
-	        command = getCommand();
-	        execute(command);
-	    }
+		while (running) {
+			if (currentUser == null) {
+				init();
+				displayMenu();
+			}
+			displayMenu();
+			command = getCommand();
+			execute(command);
+		}
 	}
 
-	private void displayMenu()
-	{
-	    System.out.println("            Filmesammlung                ");
-	    System.out.println("=========================================");
-	    System.out.println("|Film hinzufügen.....................[1]|");
-	    System.out.println("|Film löschen........................[2]|");
-	    System.out.println("|Sammlung auflisten..................[3]|");
-	    System.out.println("|Freunde anzeigen....................[4]|");
-	    System.out.println("|Beenden.............................[5]|");
-	    System.out.println("=========================================");
+	private void init() {
+		System.out.println("Bitte Nutzer wählen");
+		this.listUser();
+		this.changeUserCommand();
+		if (currentUser != null) {
+			displayMenu();
+		}
 	}
 
-	private void execute(int command)
-	{
-	    if(command == 1)
-	    {
-	        addMovie();
-	    }
-
-	    else if(command == 2)
-	    {
-	    	removeMovie();
-	    }
-
-	    else if(command == 3)
-	    {
-	    	showAllMovies();
-	    }
-
-	    else if(command == 4)
-	    {
-	    	showAllFriends();
-	    }
-
-	    else if(command == 5)
-	    {
-	        quitCommand();
-	    }
-
-	    else
-	    {
-	        unknownCommand(command);
-	    }
+	private void displayMenu() {
+		System.out.println();
+		System.out.println("Willkommen " + currentUser.getFirstName());
+		System.out.println();
+		System.out.println("            Filmesammlung                ");
+		System.out.println("=========================================");
+		System.out.println("|Alle Filme auflisten................[1]|");
+		System.out.println("|Film hinzufügen.....................[2]|");
+		System.out.println("|Film editieren......................[3]|");
+		System.out.println("|Sammlung auflisten..................[4]|");
+		System.out.println("|Film zur Sammlung hinzufügen........[5]|");
+		System.out.println("|Film aus Sammlung löschen...........[6]|");
+		System.out.println("|Nutzer anzeigen.....................[7]|");
+		System.out.println("|Nutzer wechseln.....................[8]|");
+		// System.out.println("|Zeige alle Filme für Nutzer.........[8]|");
+		System.out.println("|Beenden.............................[9]|");
+		System.out.println("=========================================");
 	}
 
-	private int getCommand()
-	{
-	    System.out.println("Bitte einen Menüpunkt wählen: ");
-	    int command = myScanner.nextInt();
-	    return command;
+	private void execute(String unparsedCommand) {
+		int command = 0;
+
+		try {
+			command = Integer.parseInt(unparsedCommand);
+			if (command == 1) {
+				this.listAllMovies();
+			} else if (command == 2) {
+				this.addMovie();
+			} else if (command == 3) {
+				this.editMovie();
+			} else if (command == 4) {
+				this.listCollection();
+			} else if (command == 5) {
+				this.addExistingMovieToCollectionCommand();
+			} else if (command == 6) {
+				this.deleteFromCollectionCommand();
+			} else if (command == 7) {
+				this.listUser();
+			} else if (command == 8) {
+				this.changeUserCommand();
+			} else if (command == 9) {
+				this.quitCommand();
+			} else {
+				unknownCommand(unparsedCommand);
+			}
+		} catch (NumberFormatException e) {
+			// unerlaubte Eingabe
+			unknownCommand(unparsedCommand);
+		}
 	}
 
-	private void addMovie()
-	{
-		Scanner scanner = new Scanner(System.in);
+	private void changeUserCommand() {
+		System.out.println("           Nutzer wechseln               ");
+		System.out.println("=========================================");
+		System.out.println("|Nutzer ID: ");
+		int id = 0;
+		try {
+			id = this.myScanner.nextInt();
+
+		} catch (NumberFormatException e) {
+			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
+			changeUserCommand();
+		}
+		this.changeUser(id);
+
+	}
+
+	private void deleteFromCollectionCommand() {
+		System.out.println("       Film von Sammlung löschen         ");
+		System.out.println("=========================================");
+		System.out.println("|Film ID: ");
+		int id = 0;
+		try {
+			id = this.myScanner.nextInt();
+		} catch (NumberFormatException e) {
+			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
+			this.deleteFromCollectionCommand();
+		}
+		this.deleteFromCollection(id);
+
+	}
+
+	private void addExistingMovieToCollectionCommand() {
+		System.out.println("       Film zur Sammlung hinzufügen      ");
+		System.out.println("=========================================");
+		System.out.println("|Film ID: ");
+		int id = 0;
+		try {
+			id = this.myScanner.nextInt();
+
+		} catch (NumberFormatException e) {
+			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
+			this.addExistingMovieToCollectionCommand();
+		}
+		this.addExistingMovieToCollection(id);
+
+	}
+
+	private void addExistingMovieToCollection(int id) {
+		controller.addExistingMovieToCollection(id, currentUser);
+	}
+
+	private void changeUser(int userId) {
+		currentUser = controller.getUserById(userId);
+		if(currentUser == null){
+			System.out.println("Nutzer mit dieser ID ist nicht im System. Bitte wählen Sie ein existierende ID.");
+			this.listUser();
+			this.changeUserCommand();
+		}
+	}
+
+	private void listUser() {
+		System.out.println("            Nutzer auflisten             ");
+		System.out.println("=========================================");
+		List<User> allUser = controller.getAllUser();
+		System.out.println("ID --- NUTZERNAME --- VORNAME --- NACHNAME");
+		for (int i = 0; i < allUser.size(); i++) {
+			User iterateUser = allUser.get(i);
+			int id = iterateUser.getId();
+			String username = iterateUser.getUserName();
+			String firstname = iterateUser.getFirstName();
+			String lastname = iterateUser.getLastName();
+			System.out.println(id + " --- " + username + " --- " + firstname + " --- " + lastname);
+		}
+	}
+
+	private void deleteFromCollection(int movieId) {
+		controller.removeMovieFromCollection(movieId, currentUser);
+	}
+
+	private void listCollection() {
+		System.out.println("           Sammlung auflisten           ");
+		System.out.println("=========================================");
+		List<Movie> allOwnedMovies = controller.getAllOwnedMovies(currentUser);
+		System.out.println("ID --- TITEL --- GENRE --- LAUFZEIT --- BESCHREIBUNG");
+		for (int i = 0; i < allOwnedMovies.size(); i++) {
+			Movie currentMovie = allOwnedMovies.get(i);
+			int id = currentMovie.getId();
+			long runtime = currentMovie.getRuntime();
+			String title = currentMovie.getTitle();
+			String genre = currentMovie.getGenre();
+			String description = currentMovie.getDescription();
+			System.out.println(id + " --- " + title + " --- " + genre + " --- " + runtime + " --- " + description);
+		}
+	}
+
+	private void editMovie() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void listAllMovies() {
+		System.out.println("           Alle Filme auflisten          ");
+		System.out.println("=========================================");
+		List<Movie> allMovies = controller.getAllMovies();
+		System.out.println("ID --- TITEL --- GENRE --- LAUFZEIT --- BESCHREIBUNG");
+		for (int i = 0; i < allMovies.size(); i++) {
+			Movie currentMovie = allMovies.get(i);
+			int id = currentMovie.getId();
+			long runtime = currentMovie.getRuntime();
+			String title = currentMovie.getTitle();
+			String genre = currentMovie.getGenre();
+			String description = currentMovie.getDescription();
+			System.out.println(id + " --- " + title + " --- " + genre + " --- " + runtime + " --- " + description);
+		}
+
+	}
+
+	private String getCommand() {
+		System.out.println("Bitte einen Menüpunkt wählen: ");
+		String command = myScanner.next();
+		return command;
+	}
+
+	private void addMovie() {
 		System.out.println("            Film hinzufügen              ");
-	    System.out.println("=========================================");
-	    System.out.println("|Titel: ");
-	    String title = scanner.nextLine();
-	    System.out.println("|Runtime: ");
-	    Integer runtime = scanner.nextInt();
-	    System.out.println("|Genre: ");
-	    String genre = scanner.nextLine();
-	    System.out.println("|Description: ");
-	    String description = scanner.nextLine();
-	    scanner.close();
-		controller.addMovieToCollection(title, runtime, genre, description);
-	}
-	
-	private void removeMovie()
-	{
-		Movie movie;
-		User user;
-	    Scanner scanner = new Scanner(System.in);
-		System.out.println("            Film löschen                 ");
-	    System.out.println("=========================================");
-	    System.out.println("|Film ID: ");
-	    Integer movieId = scanner.nextInt();
-	    scanner.close();
-	    //TODO wie übergebe ich denn hier die movieID, bzw. was brauche ich an info's um den Film zu löschen?
-	    //controller.removeMovieFromCollection(movie, user);
+		System.out.println("=========================================");
+		System.out.println("|Titel: ");
+		String title = this.myScanner.next();
+		System.out.println("|Runtime in Minutes: ");
+		Integer runtime = this.myScanner.nextInt();
+		System.out.println("|Genre: ");
+		String genre = this.myScanner.next();
+		System.out.println("|Description: ");
+		String description = this.myScanner.next();
+		LocalDate releaseDate = scanForDate();
+		System.out.println("|Add to your Collection?: [1] for yes [2] for no");
+		int addToCollection = this.myScanner.nextInt();
+		int tmpUserId = 0;
+		if(addToCollection == 1){
+			tmpUserId = currentUser.getId();
+		}
+		System.out.println(title + " , " + runtime + " , " +  genre + " , " +  description + " , " +  tmpUserId + " , " +  releaseDate);
+		controller.addMovieToCollection(title, runtime, genre, description, tmpUserId, releaseDate);
+
 	}
 
-	private void quitCommand()
-	{
-	    System.out.println("Danke für die Nutzung. Bis zum nächsten mal...");
-	    System.exit(0);
+	private LocalDate scanForDate() {
+		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		LocalDate returnDate = null;
+		int day = 0;
+		int month = 0;
+		int year = 0;
+		try {
+			// unerlaubte Eingabe
+			System.out.println("|Erscheinungsdatum: Tag");
+			day = Integer.parseInt(this.myScanner.next());
+			System.out.println("|Erscheinungsdatum: Monat");
+			month = Integer.parseInt(this.myScanner.next());
+			System.out.println("|Erscheinungsdatum: Jahr");
+			year = Integer.parseInt(this.myScanner.next());
+			returnDate = LocalDate.of(year, month, day);
+		} catch (NumberFormatException e) {
+			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
+			scanForDate();
+
+		}
+		return returnDate;
 	}
 
-	
-	private void showAllFriends()
-	{
-		System.out.println("            Freunde anzeigen             ");
-	    System.out.println("=========================================");
-	    System.out.println(controller.getAllUser());
+
+
+	private void quitCommand() {
+		myScanner.close();
+		System.out.println("Danke für die Nutzung. Bis zum nächsten mal...");
+		System.exit(0);
 	}
 
-	private void showAllMovies()
-	{	
-		System.out.println("            Sammlung auflisten           ");
-	    System.out.println("=========================================");
-	    System.out.println(controller.getAllMovies());
-	}
-
-	private void unknownCommand(int command)
-	{
-	    System.out.println("Unerlaubte Eingabe. " + command + " ist nicht für die Menüsteuerung vorgesehen. Bitte nochmal versuchen.");
+	private void unknownCommand(String command) {
+		System.out.println("Unerlaubte Eingabe. " + command
+				+ " ist nicht für die Menüsteuerung vorgesehen. Bitte nochmal versuchen.");
 	}
 }

@@ -5,10 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import de.schule.media_collection.logic.Movie;
 
 import java.sql.Connection;
+import java.sql.Date;
 public class SQLConnector {
 	
 	private String serverName = "localhost";
@@ -82,13 +85,11 @@ public class SQLConnector {
         return rs;
     }
     public ResultSet getUserById(int id) {
-    	String query = "select * from user WHERE id = ?";
+    	String query = "select * from user WHERE id = "+ id;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-			stmt = this.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-			stmt.setInt(1, id);
-			stmt.setMaxRows(1); 
+			stmt = this.connection.prepareStatement(query);
 	        rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -96,15 +97,16 @@ public class SQLConnector {
 		}
         return rs;
 	}
-    public void addMovieAndRelationship(String title, long runtime, String genre, String description, int userId){
+    public void addMovieAndRelationship(String title, long runtime, String genre, String description, int userId, LocalDate date){
     	PreparedStatement statement;
-		String movieSql = "INSERT INTO movies (title, runtime, genre, description, cover) VALUES (?, ?, ?, ?, ?)";
+		String movieSql = "INSERT INTO movies (title, runtime, genre, description, release_date) VALUES (?, ?, ?, ?, ?)";
 		try {
 			statement = this.connection.prepareStatement(movieSql, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, title);
 			statement.setLong(2, runtime);
 			statement.setString(3, genre);
 			statement.setString(4, description);
+			statement.setDate(5, Date.valueOf(date));
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
 		    	rs.next();
@@ -155,7 +157,7 @@ public class SQLConnector {
 	public ResultSet getUserOwnMovie(int movieId) {
 		// TODO Auto-generated method stub
 		PreparedStatement statement;
-		String ownedMoviesSQL = "SELECT * FROM movies WHERE id in (SELECT movie_id from user_movies WHERE user_id = ?)";
+		String ownedMoviesSQL = "SELECT * FROM user WHERE id in (SELECT user_id from user_movies WHERE movie_id = ?)";
 		ResultSet rs = null;
 		try {
 			statement = this.connection.prepareStatement(ownedMoviesSQL);
@@ -169,18 +171,17 @@ public class SQLConnector {
 	}
 
 	public ResultSet getMoviesOwnedByUser(int userId) {
-		PreparedStatement statement;
-		String ownedMoviesSQL = "SELECT * FROM user WHERE id in (SELECT user_id from user_movies WHERE movie_id = ?)";
-		ResultSet rs = null;
-		try {
-			statement = this.connection.prepareStatement(ownedMoviesSQL);
-			statement.setInt(1, userId);
-			rs = statement.executeQuery(ownedMoviesSQL);
+		String query = "select * from movies WHERE id IN(select movie_id from user_movies where user_id="+userId+")";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+			stmt = this.connection.prepareStatement(query);
+	        rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    return rs;
+        return rs;
 	}
 
 	public void removeMovieFromUser(int movieId, int userId) {
