@@ -57,7 +57,7 @@ public class DataLayer
 					String title = rs.getString("title");
 					String description = rs.getString("description");
 					String genre = rs.getString("genre");
-					Movie movie = new Movie(id, runtime, title, description, genre);
+					Movie movie = new Movie(id, runtime, title, genre, description);
 					ls.add(movie);
 				}
 			} catch (SQLException e) {
