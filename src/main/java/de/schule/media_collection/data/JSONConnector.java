@@ -21,10 +21,10 @@ public class JSONConnector {
 	public JSONConnector(){
 		// use json file to store data
 		JSONParser parser = new JSONParser();
-		File jsonFile = new File("storage.json");
-		if(!jsonFile.exists()){
+		File storageFile = new File("storage.json");
+		if(!storageFile.exists()){
 			try {
-				jsonFile.createNewFile();
+				storageFile.createNewFile();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -48,7 +48,7 @@ public class JSONConnector {
 		}else{
 			Object obj = null;
 			try {
-				obj = parser.parse(new FileReader("/Users/konstantinvogel/Documents/workspace_schule/media_collection/storage.json"));
+				obj = parser.parse(new FileReader("storage.json"));
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -67,7 +67,6 @@ public class JSONConnector {
 		}
 	}
 
-
 	public JSONArray getUser() {
 		return user;
 	}
@@ -76,12 +75,10 @@ public class JSONConnector {
 		return movies;
 	}
 
-
 	public JSONArray getUserMovies() {
 		return userMovies;
 	}
-
-
+	
 	public int getLastMovieId(){
 		JSONObject lastMovie = (JSONObject) movies.get(movies.size()-1);
 		int lastId = 0;
