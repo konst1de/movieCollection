@@ -1,5 +1,6 @@
 package de.schule.media_collection.view;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,9 @@ public class MovieViewController {
 
 	@FXML
 	private TableColumn<Movie, String> descriptionColumn;
+	
+	@FXML
+	private TableColumn<Movie, LocalDate> releaseColumn;
 
 	private View view;
 	
@@ -58,6 +62,7 @@ public class MovieViewController {
 		runtimeColumn.setCellValueFactory(cellData -> cellData.getValue().runtimeProperty().asObject());
 		genreColumn.setCellValueFactory(cellData -> cellData.getValue().genreProperty());
 		descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
+		releaseColumn.setCellValueFactory(cellData -> cellData.getValue().releaseDateProperty());
 				
 		FilteredList<Movie> filteredData = new FilteredList<>(movieTable.getItems(), e -> true);
 		

@@ -4,8 +4,10 @@ import java.time.LocalDate;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -16,7 +18,8 @@ public class Movie {
 	private final StringProperty title;
 	private final StringProperty genre;
 	private final StringProperty description;
-	private LocalDate releaseDate;
+	private final ObjectProperty<LocalDate> releaseDate;
+	
 	public Movie() {
 		this( 0, 0, null, null, null, null);
 	}
@@ -27,7 +30,7 @@ public class Movie {
 		this.runtime = new SimpleLongProperty(runtime);
 		this.genre = new SimpleStringProperty(genre);
 		this.description = new SimpleStringProperty(description);
-		this.releaseDate = releaseDate;
+		this.releaseDate = new SimpleObjectProperty<LocalDate>(releaseDate);
 	}
 	
 	public IntegerProperty idProperty() {
@@ -100,9 +103,17 @@ public class Movie {
 	public void setDescription(final String description) {
 		this.descriptionProperty().set(description);
 	}
+	
+	public ObjectProperty<LocalDate> releaseDateProperty() {
+		return this.releaseDate;
+	}
 
 	public LocalDate getReleaseDate() {
-		return this.releaseDate;
+		return this.releaseDate.get();
+	}
+	
+	public void setReleaseDate(final LocalDate date) {
+		this.releaseDate.set(date);
 	}
 	
 }
