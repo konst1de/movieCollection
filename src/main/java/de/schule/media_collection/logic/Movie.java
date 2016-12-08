@@ -32,6 +32,14 @@ public class Movie {
 		this.description = new SimpleStringProperty(description);
 		this.releaseDate = new SimpleObjectProperty<LocalDate>(releaseDate);
 	}
+	public Movie(int runtime, String title, String genre, String description, LocalDate releaseDate) {
+		this.id = new SimpleIntegerProperty(0);
+		this.title = new SimpleStringProperty(title);
+		this.runtime = new SimpleLongProperty(runtime);
+		this.genre = new SimpleStringProperty(genre);
+		this.description = new SimpleStringProperty(description);
+		this.releaseDate = new SimpleObjectProperty<LocalDate>(releaseDate);
+	}
 	
 	public IntegerProperty idProperty() {
 		return this.id;

@@ -29,9 +29,8 @@ public class Controller {
 			e.printStackTrace();
 		}
 	}
-	
-	public void addMovieToCollection(String title, int runtime, String genre, String description, int userId, LocalDate date){
-		dataConnector.addMovieAndRelationship(title, runtime, genre, description, userId, date);
+	public void setCurrentUser(User user){
+		this.currentUser = user;
 	}
 	public void addExistingMovieToCollection(int movieId, User user){
 		Movie movie = dataConnector.getMovieById(movieId);
@@ -46,8 +45,14 @@ public class Controller {
 	public List<User> getMovieById(){	
 		return dataConnector.getUserFromDatabase();
 	}
-	public void editMovie(Movie movie){
-		dataConnector.editMovie(movie);
+	public void editMovie(Movie movie, User user,Boolean addToCollection){
+		
+		if(dataConnector.getMovieById(movie.getId()) == null){
+			dataConnector.addMovie(movie, user.getId(), addToCollection);
+			
+		}else{
+			dataConnector.editMovie(movie);
+		}
 	}
 	public void removeMovieFromCollection(int movieId, User user){
 		Movie movieToRemove = this.getMovieById(movieId);

@@ -99,12 +99,10 @@ public class JSONConnector {
 		}
 		return lastId;
 	}
-	public void addMovieAndRelationship(String title, long runtime, String genre, String description,
-			int userId, LocalDate date) {
+	public void addMovie(String title, long runtime, String genre, String description, LocalDate date, Boolean addToCollection, int userId) {
 		JSONObject movie = new JSONObject();
 		int lastMovieId = getLastMovieId();
 		lastMovieId++;
-
 		movie.put("id", lastMovieId);
 		movie.put("title", title);
 		movie.put("runtime", runtime);
@@ -112,7 +110,9 @@ public class JSONConnector {
 		movie.put("description", description);
 		movie.put("releaseDate", date.toString());
 		movies.add(movie);
-		addMovieToCollection(userId, lastMovieId);
+		if(addToCollection){
+			this.addMovieToCollection(userId, lastMovieId);
+		}
 	}
 	public JSONObject getMovieById(int movieId){
 		for(int i=0; i < movies.size(); i++){
@@ -186,7 +186,7 @@ public class JSONConnector {
 		JSONArray moviesOwnedByUser = new JSONArray();
 		for(int i=0; i<userMovies.size();i++){
 			JSONObject currentUserMovie = (JSONObject) userMovies.get(i);
-			int currentUserId = Integer.parseInt((currentUserMovie.get("movieId").toString()));
+			int currentUserId = Integer.parseInt((currentUserMovie.get("userId").toString()));
 			if(userId == currentUserId){
 				int currentMovieId = Integer.parseInt((currentUserMovie.get("movieId").toString()));
 				moviesOwnedByUser.add(this.getMovieById(currentMovieId));

@@ -94,7 +94,7 @@ public class SQLConnector {
 		}
         return rs;
 	}
-    public void addMovieAndRelationship(String title, long runtime, String genre, String description, int userId, LocalDate date){
+    public void addMovie(String title, long runtime, String genre, String description, LocalDate date, Boolean addToCollection, int userId){
     	PreparedStatement statement;
 		String movieSql = "INSERT INTO movies (title, runtime, genre, description, release_date) VALUES (?, ?, ?, ?, ?)";
 		try {
@@ -106,10 +106,10 @@ public class SQLConnector {
 			statement.setDate(5, Date.valueOf(date));
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
-		    	rs.next();
+		    rs.next();
 		    int movieId = rs.getInt(1);
-		    if(userId != 0){
-				addMovieToCollection(userId, movieId);
+		    if(addToCollection){
+		    	this.addMovieToCollection(userId, movieId);
 		    }
 		} catch (SQLException e) {
 			System.out.println(e);

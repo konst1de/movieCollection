@@ -122,12 +122,18 @@ public class DataLayer
 		}
 		return ls;
 	}
-	public void addMovieAndRelationship(String title, int runtime, String genre, String description, int userId, LocalDate date){
+	public void addMovie(Movie movie, int userId, boolean addToCollection){
+		String title = movie.getTitle();
+		int runtime = (int) movie.getRuntime();
+		String genre = movie.getGenre();
+		String description = movie.getDescription();
+		LocalDate date = movie.getReleaseDate();
 		if(useSQL){
-			sqlConnector.addMovieAndRelationship(title, runtime, genre, description, userId, date);
+			sqlConnector.addMovie(title, runtime, genre, description, date, addToCollection, userId);
 		}else{
-			jsonConnector.addMovieAndRelationship(title, runtime, genre, description, userId, date);
+			jsonConnector.addMovie(title, runtime, genre, description, date, addToCollection, userId);
 		}
+		
 
 	}
 	
@@ -139,6 +145,7 @@ public class DataLayer
 		}
 	}
 	public void editMovie(Movie movie){
+		//TODO check if movie exists if not add....
 		int movieId = movie.getId();
 		String title = movie.getTitle();
 		long runtime = movie.getRuntime();
@@ -287,12 +294,17 @@ public class DataLayer
 			}
 		}else{
 			JSONObject movieJSON = jsonConnector.getMovieById(id);
-			movieId = Integer.parseInt(movieJSON.get("id").toString());
-		   	runtime = Integer.parseInt(movieJSON.get("id").toString());
-			title = (String) movieJSON.get("title");
-			description = (String) movieJSON.get("description");
-			genre = (String) movieJSON.get("genre");
-			releaseDate = movieJSON.get("releaseDate") != null ?  LocalDate.parse((String) movieJSON.get("releaseDate"), DATE_FORMAT) : null; 
+			if(movieJSON != null){
+				movieId = Integer.parseInt(movieJSON.get("id").toString());
+			   	runtime = Integer.parseInt(movieJSON.get("id").toString());
+				title = (String) movieJSON.get("title");
+				description = (String) movieJSON.get("description");
+				genre = (String) movieJSON.get("genre");
+				releaseDate = movieJSON.get("releaseDate") != null ?  LocalDate.parse((String) movieJSON.get("releaseDate"), DATE_FORMAT) : null; 
+			}
+		}
+		if(movieId == 0){
+			return null;
 		}
 		return new Movie(movieId, runtime, title, genre, description, releaseDate);
 	}
