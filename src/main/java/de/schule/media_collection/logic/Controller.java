@@ -17,13 +17,11 @@ import de.schule.media_collection.data.DataLayer;
 public class Controller {
 
 
-	User currentUser;
-	DataLayer dataConnector;
+	private User currentUser;
+	private DataLayer dataConnector;
 	public Controller(boolean useSQL) throws SQLException{
 		try {
 			dataConnector = new DataLayer(useSQL);
-
-
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

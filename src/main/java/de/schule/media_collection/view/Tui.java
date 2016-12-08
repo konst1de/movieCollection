@@ -15,8 +15,8 @@ public class Tui {
 	private Controller controller;
 	private InputScanner inputScanner;
 
-	public Tui() throws SQLException {
-		controller = new Controller(false);
+	public Tui(Boolean useSQL) throws SQLException {
+		controller = new Controller(useSQL);
 		inputScanner = new InputScanner();
 	}
 

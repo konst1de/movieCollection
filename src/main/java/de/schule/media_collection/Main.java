@@ -15,7 +15,7 @@ public class Main{
 			View.launch(View.class, args);
 		}else{
 			try {
-				Tui tui = new Tui();
+				Tui tui = new Tui(useSQL);
 				tui.menu();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
