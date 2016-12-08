@@ -29,7 +29,7 @@ public class RootLayoutController {
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
-			
+			view.restart();
 		} else {
 			return;
 		}

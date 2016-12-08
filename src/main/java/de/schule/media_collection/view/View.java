@@ -214,15 +214,16 @@ public class View extends Application {
 		logicController.editMovie(movie, addCollection);
 	}
 	
-	private void cleanup() {
-		
-	}
+
 	
 	public void restart() {
-		cleanup();
+		primaryStage.close();
+		Stage stage = new Stage();
+		this.primaryStage = stage;
+		this.primaryStage.setTitle("MovieOverview");
 		startApplication();
 	}
-	
+
 	public void reloadVideos() {
 		movieList = logicController.getAllMovies();
 		userMovieList = logicController.getAllOwnedMovies();
