@@ -3,7 +3,6 @@ package de.schule.media_collection.view;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import de.schule.media_collection.logic.Controller;
@@ -222,6 +221,11 @@ public class View extends Application {
 	public void restart() {
 		cleanup();
 		startApplication();
+	}
+	
+	public void reloadVideos() {
+		movieList = logicController.getAllMovies();
+		userMovieList = logicController.getAllOwnedMovies();
 	}
 
 	@Override

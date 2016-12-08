@@ -17,7 +17,7 @@ public class RootLayoutController {
 	
 	@FXML
 	private void handleReload() {
-		
+		view.reloadVideos();
 	}
 	
 	@FXML

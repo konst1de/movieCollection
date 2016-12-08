@@ -234,7 +234,9 @@ public class MovieViewController {
 	private void handleAddToCollection(int index) {
 		Movie selectedMovie = masterData.get(index);
 		if (selectedMovie != null) {
-			if (userMasterData.get(index) == null) {
+			try {
+				userMasterData.get(index);
+			} catch (Exception e) {
 				userMasterData.add(selectedMovie);
 				view.getLogicController().addExistingMovieToCollection(selectedMovie.getId());
 			}

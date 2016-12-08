@@ -1,13 +1,9 @@
 package de.schule.media_collection.view;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import de.schule.media_collection.logic.Movie;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
