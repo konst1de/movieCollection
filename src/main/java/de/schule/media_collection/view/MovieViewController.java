@@ -234,8 +234,10 @@ public class MovieViewController {
 	private void handleAddToCollection(int index) {
 		Movie selectedMovie = masterData.get(index);
 		if (selectedMovie != null) {
-			userMasterData.add(selectedMovie);
-			view.getLogicController().addExistingMovieToCollection(selectedMovie.getId());
+			if (userMasterData.get(index) == null) {
+				userMasterData.add(selectedMovie);
+				view.getLogicController().addExistingMovieToCollection(selectedMovie.getId());
+			}
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(view.getPrimaryStage());
