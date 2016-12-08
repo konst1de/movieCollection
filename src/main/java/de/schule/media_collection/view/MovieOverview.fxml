@@ -13,32 +13,52 @@
    <children>
       <TabPane layoutX="136.0" layoutY="70.0" prefHeight="720.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-          <Tab text="Filme">
+          <Tab text="My Collection">
+          	<content>
+              <AnchorPane prefHeight="720.0" prefWidth="1200.0">
+                <children>
+                  <TextField fx:id="userFilterField" alignment="CENTER_RIGHT" layoutX="880.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="32.0" prefWidth="310.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <TableView fx:id="userMovieTable" layoutX="13.0" layoutY="59.0" prefHeight="618.0" prefWidth="1180.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="60.0">
+                    <columns>
+                        <TableColumn fx:id="userTitleColumn" prefWidth="373.0" text="Title" />
+                        <TableColumn fx:id="userRuntimeColumn" prefWidth="58.0" text="Runtime" />
+                        <TableColumn fx:id="userGenreColumn" prefWidth="699.0" text="Genre" />
+                        <TableColumn fx:id="userDescriptionColumn" prefWidth="699.0" text="Description" />
+                        <TableColumn fx:id="userReleaseColumn" prefWidth="75.0" text="Release Date" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                  </TableView>
+                </children>
+              </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Movies">
             <content>
               <AnchorPane prefHeight="720.0" prefWidth="1200.0">
-                     <children>
-                        <TextField fx:id="filterField" alignment="CENTER_RIGHT" layoutX="880.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="32.0" prefWidth="310.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                        <MenuButton layoutX="10.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" popupSide="TOP" prefHeight="96.0" prefWidth="320.0" text="Einstellungen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <items>
-                            <MenuItem mnemonicParsing="false" onAction="#handleNewMovie" text="Add" />
-                            <MenuItem mnemonicParsing="false" onAction="#handleDeleteMovie" text="Edit" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleDeleteMovie" text="Delete" />
-                          </items>
-                        </MenuButton>
-                        <TableView fx:id="movieTable" layoutX="13.0" layoutY="59.0" prefHeight="618.0" prefWidth="1180.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="60.0">
-                          <columns>
-                            <TableColumn fx:id="titleColumn" prefWidth="373.0" text="Titel" />
-                              <TableColumn fx:id="runtimeColumn" prefWidth="58.0" text="Dauer" />
-                              <TableColumn fx:id="genreColumn" prefWidth="699.0" text="Genre" />
-                              <TableColumn fx:id="descriptionColumn" prefWidth="699.0" text="Description" />
-                              <TableColumn fx:id="releaseColumn" prefWidth="75.0" text="Release Date" />
-                          </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                     </children>
-                  </AnchorPane>
+                <children>
+                   <MenuButton layoutX="10.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" popupSide="TOP" prefHeight="32.0" prefWidth="150.0" text="Movie Settings" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                     <items>
+                       <MenuItem mnemonicParsing="false" onAction="#handleNewMovie" text="Add Movie" />
+                       <MenuItem mnemonicParsing="false" onAction="#handleEditMovie" text="Edit Movie" />
+                     </items>
+                   </MenuButton>
+                   <TextField fx:id="filterField" alignment="CENTER_RIGHT" layoutX="880.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="32.0" prefWidth="310.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                   <TableView fx:id="movieTable" layoutX="13.0" layoutY="59.0" prefHeight="618.0" prefWidth="1180.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="60.0">
+                     <columns>
+                       <TableColumn fx:id="titleColumn" prefWidth="373.0" text="Title" />
+                         <TableColumn fx:id="runtimeColumn" prefWidth="58.0" text="Runtime" />
+                         <TableColumn fx:id="genreColumn" prefWidth="699.0" text="Genre" />
+                         <TableColumn fx:id="descriptionColumn" prefWidth="699.0" text="Description" />
+                         <TableColumn fx:id="releaseColumn" prefWidth="75.0" text="Release Date" />
+                     </columns>
+                      <columnResizePolicy>
+                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                      </columnResizePolicy>
+                   </TableView>
+                </children>
+              </AnchorPane>
             </content>
           </Tab>
         </tabs>

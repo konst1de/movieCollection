@@ -1,9 +1,13 @@
 package de.schule.media_collection.view;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import de.schule.media_collection.logic.Movie;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -20,6 +24,9 @@ public class MovieEditController {
 	
 	@FXML
 	private TextField descriptionField;
+	
+	@FXML
+	private DatePicker releaseDatePicker;
 	
 	private Stage dialogStage;
 	private Movie movie;
@@ -40,6 +47,7 @@ public class MovieEditController {
 		genreField.setText(movie.getGenre());
 		runtimeField.setText(Long.toString(movie.getRuntime()));
 		descriptionField.setText(movie.getDescription());
+		releaseDatePicker.setValue(movie.getReleaseDate());			
 	}
 	
 	public boolean isOkClicked() {
@@ -53,6 +61,7 @@ public class MovieEditController {
 			movie.setGenre(genreField.getText());
 			movie.setRuntime(Integer.parseInt(runtimeField.getText()));
 			movie.setDescription(descriptionField.getText());
+			movie.setReleaseDate(releaseDatePicker.getValue());
 			
 			okClicked = true;
 			dialogStage.close();
@@ -89,7 +98,7 @@ public class MovieEditController {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initOwner(dialogStage);
 			alert.setTitle("Invalid Fields");
-			alert.setHeaderText("Please correct invakud fields");
+			alert.setHeaderText("Please correct invalid fields");
 			alert.setContentText(errorMessage);
 			
 			alert.showAndWait();

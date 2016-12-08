@@ -48,6 +48,11 @@ public class View extends Application {
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+			RootLayoutController controller = loader.getController();
+			controller.setView(this);
+			
+			primaryStage.show();
 		}
 
 		catch (IOException e) {
@@ -66,7 +71,7 @@ public class View extends Application {
 				@Override
 				public Object call(Class<?> controllerClass) {
 					if (controllerClass == MovieViewController.class) {
-						MovieViewController controller = new MovieViewController(movieList, View.this);
+						MovieViewController controller = new MovieViewController(movieList, userMovieList, View.this);
 						return controller;
 					} else {
 						try {
@@ -78,8 +83,8 @@ public class View extends Application {
 					return controllerClass;
 				}
 			});
+			
 			AnchorPane movieOverview = (AnchorPane) loader.load();
-
 			rootLayout.setCenter(movieOverview);
 			
 		} catch (IOException e) {
@@ -107,7 +112,13 @@ public class View extends Application {
 			
 			dialogStage.showAndWait();
 			
-			return controller.isOkClicked();
+			if (controller.isOkClicked()) {
+				logicController.editMovie(movie);
+				return true;
+			} else {
+				return false;
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -171,8 +182,21 @@ public class View extends Application {
 		}
 	}
 	
+	private void cleanup() {
+		
+	}
+	
+	public void restart(Stage primaryStage) {
+		cleanup();
+		startApplication(primaryStage);
+	}
+
 	@Override
 	public void start(Stage primaryStage) {
+		startApplication(primaryStage);
+	}
+	
+	private void startApplication(Stage primaryStage) {
 		try {
 			 logicController = new Controller(true);
 		} catch (SQLException e) {
@@ -188,7 +212,8 @@ public class View extends Application {
 		
 		if (selectedUser != null) {
 			initRootLayout();
-			movieList = logicController.getAllMovies();			
+			movieList = logicController.getAllMovies();	
+			userMovieList = logicController.getAllOwnedMovies(selectedUser);
 			showMovieOverview();
 		} else {
 			System.exit(0);

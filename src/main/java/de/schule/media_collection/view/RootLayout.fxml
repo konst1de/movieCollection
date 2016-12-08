@@ -5,26 +5,20 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane id="mainContent" fx:id="mainContent" prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane id="mainContent" fx:id="mainContent" prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.schule.media_collection.view.RootLayoutController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Change User" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
+            	<MenuItem mnemonicParsing="false" onAction="#handleReload" text="Reload Movielists" />
+              <MenuItem mnemonicParsing="false" onAction="#handleChangeUser" text="Logout" />
+              <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Close" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Reload" />
-                  <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Abort" />
-               </items>
-            </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
             </items>
           </Menu>
         </menus>
