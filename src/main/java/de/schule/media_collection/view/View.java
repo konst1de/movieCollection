@@ -38,6 +38,10 @@ public class View extends Application {
 		return primaryStage;
 	}
 	
+	public Controller getLogicController() {
+		return logicController;
+	}
+	
 	private void initRootLayout() {
 
 		try {
@@ -101,23 +105,41 @@ public class View extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(View.class.getResource("MovieEditDialog.fxml"));
+			
+			loader.setControllerFactory(new Callback<Class<?>, Object>() {
+				@Override
+				public Object call(Class<?> controllerClass) {
+					if (controllerClass == MovieEditController.class) {
+						MovieEditController controller = new MovieEditController(movie);
+						return controller;
+					} else {
+						try {
+							return controllerClass.newInstance();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					return controllerClass;
+				}
+			});
+			
 			AnchorPane page = (AnchorPane) loader.load();
+			MovieEditController controller = loader.getController();
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Edit Movie");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.initOwner(primaryStage);
+			
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
-			
-			MovieEditController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
-			controller.setMovie(movie);
+			
+			controller.setMovie();
 			
 			dialogStage.showAndWait();
 			
-			if (controller.isOkClicked()) {
-				logicController.editMovie(movie, true);
+			if (controller.getOkClicked()) {
 				return true;
 			} else {
 				return false;
@@ -187,6 +209,10 @@ public class View extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void saveMovie(Movie movie, boolean addCollection) {
+		logicController.editMovie(movie, addCollection);
 	}
 	
 	private void cleanup() {

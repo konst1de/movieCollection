@@ -3,6 +3,7 @@ package de.schule.media_collection.view;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.geometry.Pos;
 
 import de.schule.media_collection.logic.Movie;
 import javafx.collections.FXCollections;
@@ -11,6 +12,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -59,6 +62,15 @@ public class MovieViewController {
 	
 	@FXML
 	private TableColumn<Movie, LocalDate> userReleaseColumn;
+	
+	@FXML
+	private TableColumn<Movie, Movie> buttonEditColumn;
+	
+	@FXML
+	private TableColumn<Movie, Movie> buttonAddColumn;
+	
+	@FXML
+	private TableColumn<Movie, Movie> userButtonRemoveColumn;
 
 	private View view;
 	
@@ -98,6 +110,23 @@ public class MovieViewController {
 		userGenreColumn.setCellValueFactory(cellData -> cellData.getValue().genreProperty());
 		userDescriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 		userReleaseColumn.setCellValueFactory(cellData -> cellData.getValue().releaseDateProperty());
+		
+		userButtonRemoveColumn.setCellFactory(col -> {
+			Button removeButton = new Button("Remove Movie");
+			TableCell<Movie, Movie> cell = new TableCell<Movie, Movie>() {
+				public void updateItem(Movie movie, boolean empty) {
+					super.updateItem(movie, empty);
+					this.setAlignment(Pos.CENTER);
+					if (empty) {
+						setGraphic(null);
+					} else {
+						setGraphic(removeButton);
+					}
+				}
+			};
+			removeButton.setOnAction(e -> handleRemoveUserMovie(cell.getIndex()));
+			return cell;
+		});
 				
 		FilteredList<Movie> userFilteredData = new FilteredList<>(userMovieTable.getItems(), e -> true);
 		
@@ -121,6 +150,22 @@ public class MovieViewController {
 		userMovieTable.setItems(sortedData);
 	}
 
+	private void handleRemoveUserMovie(int index) {
+		Movie selectedMovie = userMasterData.get(index);
+		if (selectedMovie != null) {
+			userMasterData.remove(selectedMovie);
+			view.getLogicController().removeMovieFromCollection(selectedMovie.getId());
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(view.getPrimaryStage());
+			alert.setTitle("No selection");
+			alert.setHeaderText("No Movie Selected");
+			alert.setContentText("Please select a movie in the table.");
+			
+			alert.showAndWait();
+		}
+	}
+
 	private void initMovieTable() {
 		movieTable.setItems(masterData);
 		
@@ -129,6 +174,40 @@ public class MovieViewController {
 		genreColumn.setCellValueFactory(cellData -> cellData.getValue().genreProperty());
 		descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 		releaseColumn.setCellValueFactory(cellData -> cellData.getValue().releaseDateProperty());
+		buttonEditColumn.setCellFactory(col -> {
+			Button editButton = new Button("Edit Movie");
+			TableCell<Movie, Movie> cell = new TableCell<Movie, Movie>() {
+				public void updateItem(Movie movie, boolean empty) {
+					super.updateItem(movie, empty);
+					this.setAlignment(Pos.CENTER);
+					if (empty) {
+						setGraphic(null);
+					} else {
+						setGraphic(editButton);
+					}
+				}
+			};
+			editButton.setOnAction(e -> handleEditMovie(cell.getIndex()));
+			return cell;
+		});
+		
+		buttonAddColumn.setCellFactory(col -> {
+			Button addButton = new Button("Add to Collection");
+			TableCell<Movie, Movie> cell = new TableCell<Movie, Movie>() {
+				public void updateItem(Movie movie, boolean empty) {
+					super.updateItem(movie, empty);
+					this.setAlignment(Pos.CENTER);
+					if (empty) {
+						setGraphic(null);
+					} else {
+						setGraphic(addButton);
+					}
+				}
+			};
+			addButton.setOnAction(e -> handleAddToCollection(cell.getIndex()));
+			return cell;
+			
+		});
 				
 		FilteredList<Movie> filteredData = new FilteredList<>(movieTable.getItems(), e -> true);
 		
@@ -152,20 +231,41 @@ public class MovieViewController {
 		movieTable.setItems(sortedData);
 	}
 
+	private void handleAddToCollection(int index) {
+		Movie selectedMovie = masterData.get(index);
+		if (selectedMovie != null) {
+			userMasterData.add(selectedMovie);
+			view.getLogicController().addExistingMovieToCollection(selectedMovie.getId());
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(view.getPrimaryStage());
+			alert.setTitle("No selection");
+			alert.setHeaderText("No Movie Selected");
+			alert.setContentText("Please select a movie in the table.");
+			
+			alert.showAndWait();
+		}
+		
+	}
+
 	@FXML
 	private void handleNewMovie() {
 		Movie tempMovie = new Movie();
 		boolean okClicked = view.showMovieEditDialog(tempMovie);
 		if (okClicked) {
 			masterData.add(tempMovie);
+			view.getLogicController().editMovie(tempMovie, false);
 		}
 	}
 	
-	@FXML
-	private void handleEditMovie () {
-		Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
+	private void handleEditMovie(int index) {
+		Movie selectedMovie = masterData.get(index);
 		if (selectedMovie != null) {
 			boolean okClicked = view.showMovieEditDialog(selectedMovie);
+			view.getLogicController().editMovie(selectedMovie, false);
+			if (okClicked) {
+				masterData.set(index, selectedMovie);
+			}
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(view.getPrimaryStage());

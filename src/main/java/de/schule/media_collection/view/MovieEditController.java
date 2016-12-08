@@ -7,6 +7,7 @@ import de.schule.media_collection.logic.Movie;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -32,6 +33,10 @@ public class MovieEditController {
 	private Movie movie;
 	private boolean okClicked = false;
 	
+	public MovieEditController(Movie movie) {
+		this.movie = movie;
+	}
+	
 	@FXML
 	private void initialize() {
 	}
@@ -40,9 +45,7 @@ public class MovieEditController {
 		this.dialogStage = dialogStage;
 	}
 	
-	public void setMovie(Movie movie) {
-		this.movie = movie;
-		
+	public void setMovie() {
 		titleField.setText(movie.getTitle());
 		genreField.setText(movie.getGenre());
 		runtimeField.setText(Long.toString(movie.getRuntime()));
@@ -50,7 +53,7 @@ public class MovieEditController {
 		releaseDatePicker.setValue(movie.getReleaseDate());			
 	}
 	
-	public boolean isOkClicked() {
+	public boolean getOkClicked() {
 		return okClicked;
 	}
 	
@@ -59,7 +62,7 @@ public class MovieEditController {
 		if (isInputValid()) {
 			movie.setTitle(titleField.getText());
 			movie.setGenre(genreField.getText());
-			movie.setRuntime(Integer.parseInt(runtimeField.getText()));
+			movie.setRuntime(Long.parseLong(runtimeField.getText()));
 			movie.setDescription(descriptionField.getText());
 			movie.setReleaseDate(releaseDatePicker.getValue());
 			
