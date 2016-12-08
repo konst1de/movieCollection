@@ -82,7 +82,7 @@ public class DataLayer
 					String genre = (String) movieObj.get("genre");
 					LocalDate releaseDate = movieObj.get("releaseDate") != null ?  LocalDate.parse((String) movieObj.get("releaseDate"), DATE_FORMAT) : null; 
 
-					Movie movie = new Movie(id, runtime, title, description, genre, releaseDate);
+					Movie movie = new Movie(id, runtime, title, genre, description, releaseDate);
 					ls.add(movie);
 				} 
 			} 
@@ -145,16 +145,16 @@ public class DataLayer
 		}
 	}
 	public void editMovie(Movie movie){
-		//TODO check if movie exists if not add....
 		int movieId = movie.getId();
 		String title = movie.getTitle();
 		long runtime = movie.getRuntime();
 		String genre = movie.getGenre();
 		String description = movie.getDescription();
+		LocalDate relaseDate = movie.getReleaseDate();
 		if(useSQL){
-			sqlConnector.editMovie(movieId, title, runtime, genre, description);
+			sqlConnector.editMovie(movieId, title, runtime, genre, description, relaseDate);
 		}else{
-			jsonConnector.editMovie(movieId, title, runtime, genre, description);
+			jsonConnector.editMovie(movieId, title, runtime, genre, description, relaseDate);
 		}
 	}
     public List<User> getUserWhoOwnMovie(Movie movie){

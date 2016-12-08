@@ -36,7 +36,7 @@ public class Tui {
 	}
 
 	private void init() {
-		System.out.println("Bitte Nutzer wählen");
+		System.out.println("Please choose a user.");
 		this.listUser();
 		this.changeUserCommand();
 		if (controller.getCurrentUser() != null) {
@@ -46,20 +46,20 @@ public class Tui {
 
 	private void displayMenu() {
 		System.out.println();
-		System.out.println("Willkommen " + controller.getCurrentUser().getFirstName());
+		System.out.println("Welcome " + controller.getCurrentUser().getFirstName());
 		System.out.println();
-		System.out.println("            Filmesammlung                ");
+		System.out.println("            Movie Collection             ");
 		System.out.println("=========================================");
-		System.out.println("|Alle Filme auflisten................[1]|");
-		System.out.println("|Film hinzufügen.....................[2]|");
-		System.out.println("|Film editieren......................[3]|");
-		System.out.println("|Sammlung auflisten..................[4]|");
-		System.out.println("|Film zur Sammlung hinzufügen........[5]|");
-		System.out.println("|Film aus Sammlung löschen...........[6]|");
-		System.out.println("|Nutzer anzeigen.....................[7]|");
-		System.out.println("|Nutzer wechseln.....................[8]|");
+		System.out.println("|List all movies.....................[1]|");
+		System.out.println("|Add movie...........................[2]|");
+		System.out.println("|Edit movie..........................[3]|");
+		System.out.println("|List collection.....................[4]|");
+		System.out.println("|Add movie to your collection........[5]|");
+		System.out.println("|Remove movie from your collection...[6]|");
+		System.out.println("|Show all user.......................[7]|");
+		System.out.println("|Change user.........................[8]|");
 		// System.out.println("|Zeige alle Filme für Nutzer.........[8]|");
-		System.out.println("|Beenden.............................[9]|");
+		System.out.println("|Quit................................[9]|");
 		System.out.println("=========================================");
 	}
 
@@ -96,15 +96,15 @@ public class Tui {
 	}
 
 	private void changeUserCommand() {
-		System.out.println("           Nutzer wechseln               ");
+		System.out.println("           Change user                   ");
 		System.out.println("=========================================");
-		System.out.println("|Nutzer ID: ");
+		System.out.println("|User ID: ");
 		int id = 0;
 		try {
 			id = this.inputScanner.expectInteger();
 
 		} catch (NumberFormatException e) {
-			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
+			System.out.println("|Incorret input. Please only input numbers.");
 			changeUserCommand();
 		}
 		this.changeUser(id);
@@ -112,30 +112,31 @@ public class Tui {
 	}
 
 	private void deleteFromCollectionCommand() {
-		System.out.println("       Film von Sammlung löschen         ");
+		System.out.println("     Remove movie from your collection   ");
 		System.out.println("=========================================");
-		System.out.println("|Film ID: ");
+		System.out.println("|Movie ID: ");
 		int id = 0;
 		try {
 			id = this.inputScanner.expectInteger();
 		} catch (NumberFormatException e) {
-			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
+			System.out.println("|Incorret input. Please only input numbers.");
 			this.deleteFromCollectionCommand();
 		}
+		
 		this.deleteFromCollection(id);
 
 	}
 
 	private void addExistingMovieToCollectionCommand() {
-		System.out.println("       Film zur Sammlung hinzufügen      ");
+		System.out.println("       Add movie to your collection      ");
 		System.out.println("=========================================");
-		System.out.println("|Film ID: ");
+		System.out.println("|Movie ID: ");
 		int id = 0;
 		try {
 			id = this.inputScanner.expectInteger();
 
 		} catch (NumberFormatException e) {
-			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
+			System.out.println("|Incorret input. Please only input numbers.");
 			this.addExistingMovieToCollectionCommand();
 		}
 		this.addExistingMovieToCollection(id);
@@ -151,17 +152,17 @@ public class Tui {
 		controller.setCurrentUser(controller.getUserById(userId));
 
 		if(controller.getCurrentUser() == null){
-			System.out.println("Nutzer mit dieser ID ist nicht im System. Bitte wählen Sie ein existierende ID.");
+			System.out.println("There is no user with the ID: " + userId + ". Please use an existing ID from the following user.");
 			this.listUser();
 			this.changeUserCommand();
 		}
 	}
 
 	private void listUser() {
-		System.out.println("            Nutzer auflisten             ");
+		System.out.println("            List all user                ");
 		System.out.println("=========================================");
 		List<User> allUser = controller.getAllUser();
-		System.out.println("ID --- NUTZERNAME --- VORNAME --- NACHNAME");
+		this.listUserHeader();
 		for (int i = 0; i < allUser.size(); i++) {
 			User iterateUser = allUser.get(i);
 			int id = iterateUser.getId();
@@ -173,14 +174,19 @@ public class Tui {
 	}
 
 	private void deleteFromCollection(int movieId) {
-		controller.removeMovieFromCollection(movieId);
+		if(controller.getMovieById(movieId) != null){
+			controller.removeMovieFromCollection(movieId);
+		}
+		else{
+			System.out.println("There is no movie with the given ID.");
+		}
 	}
 
 	private void listCollection() {
-		System.out.println("           Sammlung auflisten           ");
+		System.out.println("          List your collection           ");
 		System.out.println("=========================================");
 		List<Movie> allOwnedMovies = controller.getAllOwnedMovies();
-		System.out.println("ID --- TITEL --- GENRE --- LAUFZEIT --- BESCHREIBUNG");
+		this.listMovieHeader();
 		for (int i = 0; i < allOwnedMovies.size(); i++) {
 			Movie currentMovie = allOwnedMovies.get(i);
 			int id = currentMovie.getId();
@@ -188,20 +194,50 @@ public class Tui {
 			String title = currentMovie.getTitle();
 			String genre = currentMovie.getGenre();
 			String description = currentMovie.getDescription();
-			System.out.println(id + " --- " + title + " --- " + genre + " --- " + runtime + " --- " + description);
+			LocalDate releaseDate = currentMovie.getReleaseDate();
+			System.out.println(id + " --- " + title + " --- " + genre + " --- " + releaseDate.toString() + " --- " + runtime + " --- " + description);
 		}
 	}
 
-	private void editMovie() {
-		// TODO Auto-generated method stub
+	private void listMovieHeader() {
+		System.out.println("ID --- TITLE --- GENRE --- RELEASE DATE --- RUNTIME --- DESCRIPTION");		
+	}
+	private void listUserHeader() {
+		System.out.println("ID --- USERNAME --- FIRSTNAME --- LASTNAME");		
+	}
 
+	private void editMovie() {
+		System.out.println("              Edit movie                 ");
+		System.out.println("=========================================");
+		System.out.println("|Enter movie ID: ");
+		int movieId = this.inputScanner.expectInteger();
+		Movie movieToEdit = controller.getMovieById(movieId);
+		if(movieToEdit != null){
+			System.out.println("|Old Title: " + movieToEdit.getTitle());
+			System.out.println("|New Title: ");
+			movieToEdit.setTitle(this.inputScanner.expectString()); 
+			System.out.println("|Old Runtime: " + movieToEdit.getRuntime());
+			System.out.println("|New Runtime: ");
+			movieToEdit.setRuntime(this.inputScanner.expectInteger());
+			System.out.println("|Old Genre: " + movieToEdit.getGenre());
+			System.out.println("|New Genre: ");
+			movieToEdit.setGenre(this.inputScanner.expectString());
+			System.out.println("|Old Description: " + movieToEdit.getDescription());
+			System.out.println("|New Description: ");
+			movieToEdit.setDescription(this.inputScanner.expectString());
+			System.out.println("|Old Releasedate: " + movieToEdit.getReleaseDate().toString());
+			System.out.println("|New Releasedate: ");
+			movieToEdit.setReleaseDate(scanForDate());
+			this.controller.editMovie(movieToEdit, false);
+		}
+		
 	}
 
 	private void listAllMovies() {
-		System.out.println("           Alle Filme auflisten          ");
+		System.out.println("           List all movies               ");
 		System.out.println("=========================================");
 		List<Movie> allMovies = controller.getAllMovies();
-		System.out.println("ID --- TITEL --- GENRE --- ERSCHEINUNGSJAHR--- LAUFZEIT --- BESCHREIBUNG");
+		this.listMovieHeader();
 		for (int i = 0; i < allMovies.size(); i++) {
 			Movie currentMovie = allMovies.get(i);
 			int id = currentMovie.getId();
@@ -210,21 +246,21 @@ public class Tui {
 			String genre = currentMovie.getGenre();
 			String description = currentMovie.getDescription();
 			LocalDate releaseDate = currentMovie.getReleaseDate();
-			System.out.println(id + " --- " + title + " --- " + genre + " --- " + releaseDate + " --- " + runtime + " --- " + description);
+			System.out.println(id + " --- " + title + " --- " + genre + " --- " + releaseDate.toString() + " --- " + runtime + " --- " + description);
 		}
 
 	}
 
 	private String getCommand() {
-		System.out.println("Bitte einen Menüpunkt wählen: ");
+		System.out.println("Please choose a menu point.");
 		String command = inputScanner.expectString();
 		return command;
 	}
 
 	private void addMovie() {
-		System.out.println("            Film hinzufügen              ");
+		System.out.println("            Add movie                    ");
 		System.out.println("=========================================");
-		System.out.println("|Titel: ");
+		System.out.println("|Title: ");
 		String title = this.inputScanner.expectString();
 		System.out.println("|Runtime in Minutes: ");
 		Integer runtime = this.inputScanner.expectInteger();
@@ -251,15 +287,15 @@ public class Tui {
 		int year = 0;
 		try {
 			// unerlaubte Eingabe
-			System.out.println("|Erscheinungsdatum: Tag");
+			System.out.println("|Please enter the day of the release date");
 			day = this.inputScanner.expectDay();
-			System.out.println("|Erscheinungsdatum: Monat");
+			System.out.println("|Please enter the month of the release date");
 			month = this.inputScanner.expectMonth();
-			System.out.println("|Erscheinungsdatum: Jahr");
+			System.out.println("|Please enter the year of the release date");
 			year = this.inputScanner.expectYear();
 			returnDate = LocalDate.of(year, month, day);
 		} catch (NumberFormatException e) {
-			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
+			System.out.println("|Incorrect input. Please Try again");
 			scanForDate();
 
 		}
@@ -270,12 +306,11 @@ public class Tui {
 
 	private void quitCommand() {
 		this.inputScanner.closeStream();
-		System.out.println("Danke für die Nutzung. Bis zum nächsten mal...");
+		System.out.println("Thanks for using the movie collection.");
 		System.exit(0);
 	}
 
 	private void unknownCommand(String command) {
-		System.out.println("Unerlaubte Eingabe. " + command
-				+ " ist nicht für die Menüsteuerung vorgesehen. Bitte nochmal versuchen.");
+		System.out.println(command+ " is not allowed as input.");
 	}
 }

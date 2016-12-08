@@ -43,9 +43,7 @@ public class Controller {
 	public List<User> getAllUser(){	
 		return dataConnector.getUserFromDatabase();
 	}
-	public List<User> getMovieById(){	
-		return dataConnector.getUserFromDatabase();
-	}
+
 	public void editMovie(Movie movie,Boolean addToCollection){
 		
 		if(dataConnector.getMovieById(movie.getId()) == null){

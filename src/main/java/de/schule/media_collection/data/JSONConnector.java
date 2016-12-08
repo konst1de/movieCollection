@@ -134,14 +134,13 @@ public class JSONConnector {
 		}
 		return null;
 	}
-	public void editMovie(int movieId, String title, long runtime, String genre, String description) {
+	public void editMovie(int movieId, String title, long runtime, String genre, String description, LocalDate releaseDate) {
 		JSONObject movie = getMovieById(movieId);
-		int lastMovieId = getLastMovieId();
-		movie.put("id", lastMovieId);
 		movie.put("title", title);
 		movie.put("runtime", runtime);
 		movie.put("genre", genre);
 		movie.put("description", description);
+		movie.put("releaseDate", releaseDate.toString());
 		this.storeToFile();
 	}
 	
