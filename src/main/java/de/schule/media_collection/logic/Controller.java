@@ -32,9 +32,12 @@ public class Controller {
 	public void setCurrentUser(User user){
 		this.currentUser = user;
 	}
-	public void addExistingMovieToCollection(int movieId, User user){
+	public User getCurrentUser(){
+		return this.currentUser;
+	}
+	public void addExistingMovieToCollection(int movieId){
 		Movie movie = dataConnector.getMovieById(movieId);
-		dataConnector.addMovieToCollection(movie, user);
+		dataConnector.addMovieToCollection(movie, this.currentUser);
 	}
 	public List<Movie> getAllMovies(){
 		return dataConnector.getMoviesFromDatabase();
@@ -45,21 +48,20 @@ public class Controller {
 	public List<User> getMovieById(){	
 		return dataConnector.getUserFromDatabase();
 	}
-	public void editMovie(Movie movie, User user,Boolean addToCollection){
+	public void editMovie(Movie movie,Boolean addToCollection){
 		
 		if(dataConnector.getMovieById(movie.getId()) == null){
-			dataConnector.addMovie(movie, user.getId(), addToCollection);
-			
+			dataConnector.addMovie(movie, this.currentUser.getId(), addToCollection);
 		}else{
 			dataConnector.editMovie(movie);
 		}
 	}
-	public void removeMovieFromCollection(int movieId, User user){
+	public void removeMovieFromCollection(int movieId){
 		Movie movieToRemove = this.getMovieById(movieId);
-		dataConnector.removeMovieFromCollection(movieToRemove, user);
+		dataConnector.removeMovieFromCollection(movieToRemove, this.currentUser);
 	}
-	public List<Movie> getAllOwnedMovies(User user){
-		return dataConnector.getAllOwnedMovies(user);
+	public List<Movie> getAllOwnedMovies(){
+		return dataConnector.getAllOwnedMovies(this.currentUser);
 	}
 	public List<User> getOwnerForMovie(Movie movie){
 		return dataConnector.getUserWhoOwnMovie(movie);

@@ -14,7 +14,6 @@ public class Tui {
 
 	private Controller controller;
 	private InputScanner inputScanner;
-	private User currentUser;
 
 	public Tui() throws SQLException {
 		controller = new Controller(false);
@@ -26,7 +25,7 @@ public class Tui {
 		boolean running = true;
 
 		while (running) {
-			if (currentUser == null) {
+			if (controller.getCurrentUser() == null) {
 				init();
 			}else{
 				displayMenu();
@@ -40,14 +39,14 @@ public class Tui {
 		System.out.println("Bitte Nutzer wählen");
 		this.listUser();
 		this.changeUserCommand();
-		if (currentUser != null) {
+		if (controller.getCurrentUser() != null) {
 			displayMenu();
 		}
 	}
 
 	private void displayMenu() {
 		System.out.println();
-		System.out.println("Willkommen " + currentUser.getFirstName());
+		System.out.println("Willkommen " + controller.getCurrentUser().getFirstName());
 		System.out.println();
 		System.out.println("            Filmesammlung                ");
 		System.out.println("=========================================");
@@ -144,12 +143,14 @@ public class Tui {
 	}
 
 	private void addExistingMovieToCollection(int id) {
-		controller.addExistingMovieToCollection(id, currentUser);
+		controller.addExistingMovieToCollection(id);
 	}
 
 	private void changeUser(int userId) {
-		currentUser = controller.getUserById(userId);
-		if(currentUser == null){
+		
+		controller.setCurrentUser(controller.getUserById(userId));
+
+		if(controller.getCurrentUser() == null){
 			System.out.println("Nutzer mit dieser ID ist nicht im System. Bitte wählen Sie ein existierende ID.");
 			this.listUser();
 			this.changeUserCommand();
@@ -172,13 +173,13 @@ public class Tui {
 	}
 
 	private void deleteFromCollection(int movieId) {
-		controller.removeMovieFromCollection(movieId, currentUser);
+		controller.removeMovieFromCollection(movieId);
 	}
 
 	private void listCollection() {
 		System.out.println("           Sammlung auflisten           ");
 		System.out.println("=========================================");
-		List<Movie> allOwnedMovies = controller.getAllOwnedMovies(currentUser);
+		List<Movie> allOwnedMovies = controller.getAllOwnedMovies();
 		System.out.println("ID --- TITEL --- GENRE --- LAUFZEIT --- BESCHREIBUNG");
 		for (int i = 0; i < allOwnedMovies.size(); i++) {
 			Movie currentMovie = allOwnedMovies.get(i);
@@ -238,7 +239,7 @@ public class Tui {
 		if(addToCollection == 1){
 			addToCollectionBoolean = true;
 		}
-		controller.editMovie(new Movie(runtime, title, genre, description, releaseDate), currentUser, addToCollectionBoolean);
+		controller.editMovie(new Movie(runtime, title, genre, description, releaseDate), addToCollectionBoolean);
 
 	}
 
