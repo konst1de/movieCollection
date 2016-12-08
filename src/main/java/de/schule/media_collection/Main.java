@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import de.schule.media_collection.view.Tui;
 import de.schule.media_collection.view.View;
+import javafx.application.Application;
 
 public class Main{
 	
@@ -12,17 +13,15 @@ public class Main{
 		boolean useGUI = args.length > 1 && "--use-gui".equals(args[1]);
 		
 		if(useGUI){
-			View.launch(View.class, args);
+			Application.launch(View.class, args);
 		}else{
 			try {
 				Tui tui = new Tui(useSQL);
 				tui.menu();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
 		
 	}
 }

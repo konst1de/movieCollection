@@ -1,7 +1,10 @@
 package de.schule.media_collection.view;
 
+import java.util.Optional;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 
 public class RootLayoutController {
@@ -18,8 +21,18 @@ public class RootLayoutController {
 	}
 	
 	@FXML
-	private void handleChangeUser() {
-		
+	private void handleLogout() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Information");
+		alert.setHeaderText("Logout!");
+		alert.setContentText("Do you want to logout?");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			
+		} else {
+			return;
+		}
 	}
 	
 	@FXML

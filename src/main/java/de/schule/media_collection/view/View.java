@@ -3,6 +3,7 @@ package de.schule.media_collection.view;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import de.schule.media_collection.logic.Controller;
@@ -27,7 +28,7 @@ public class View extends Application {
 	private List<Movie> movieList;
 	private List<Movie> userMovieList;
 	private List<User> userList;
-	private User selectedUser;
+	private User currentUser;
 	private Controller logicController;
 
 	public View() {
@@ -64,6 +65,9 @@ public class View extends Application {
 
 	private void showMovieOverview() {
 		try {
+			movieList = logicController.getAllMovies();	
+			userMovieList = logicController.getAllOwnedMovies();
+			
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(View.class.getResource("MovieOverview.fxml"));
 			
@@ -113,7 +117,7 @@ public class View extends Application {
 			dialogStage.showAndWait();
 			
 			if (controller.isOkClicked()) {
-				logicController.editMovie(movie);
+				logicController.editMovie(movie, true);
 				return true;
 			} else {
 				return false;
@@ -127,6 +131,8 @@ public class View extends Application {
 	
 	public void showUserLoginDialog() {
 		try {
+			userList = logicController.getAllUser();
+			
 			FXMLLoader loader = new FXMLLoader();
 			
 			loader.setLocation(View.class.getResource("UserLoginDialog.fxml"));
@@ -162,7 +168,8 @@ public class View extends Application {
 			dialogStage.showAndWait();
 			
 			if (controller.isSignInClicked() == true) {
-				selectedUser = controller.getSelectedUser();
+				currentUser = controller.getSelectedUser();
+				logicController.setCurrentUser(currentUser);
 			} else {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("User Selection");
@@ -186,34 +193,36 @@ public class View extends Application {
 		
 	}
 	
-	public void restart(Stage primaryStage) {
+	public void restart() {
 		cleanup();
-		startApplication(primaryStage);
+		startApplication();
 	}
 
 	@Override
 	public void start(Stage primaryStage) {
-		startApplication(primaryStage);
-	}
-	
-	private void startApplication(Stage primaryStage) {
+		
+		boolean useSql = getParameters().getUnnamed().get(0).equals("--use-sql");
+        
 		try {
-			 logicController = new Controller(true);
+			 logicController = new Controller(useSql);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Connection Error!");
+			alert.setHeaderText("Error! No Connection!");
+			alert.setContentText("Missing Connection! Please check server connectivity!");
 		}
 		
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("MovieOverview");
-		
-		userList = logicController.getAllUser();
+		startApplication();
+	}
+	
+	private void startApplication() {
 		
 		showUserLoginDialog();
 		
-		if (selectedUser != null) {
+		if (currentUser != null) {
 			initRootLayout();
-			movieList = logicController.getAllMovies();	
-			userMovieList = logicController.getAllOwnedMovies(selectedUser);
 			showMovieOverview();
 		} else {
 			System.exit(0);
