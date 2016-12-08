@@ -13,12 +13,12 @@ import java.util.Scanner;
 public class Tui {
 
 	private Controller controller;
-	private Scanner myScanner;
+	private InputScanner inputScanner;
 	private User currentUser;
 
 	public Tui() throws SQLException {
 		controller = new Controller(false);
-		myScanner = new Scanner(System.in);
+		inputScanner = new InputScanner();
 	}
 
 	public void menu() {
@@ -102,7 +102,7 @@ public class Tui {
 		System.out.println("|Nutzer ID: ");
 		int id = 0;
 		try {
-			id = this.myScanner.nextInt();
+			id = this.inputScanner.expectInteger();
 
 		} catch (NumberFormatException e) {
 			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
@@ -118,7 +118,7 @@ public class Tui {
 		System.out.println("|Film ID: ");
 		int id = 0;
 		try {
-			id = this.myScanner.nextInt();
+			id = this.inputScanner.expectInteger();
 		} catch (NumberFormatException e) {
 			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
 			this.deleteFromCollectionCommand();
@@ -133,7 +133,7 @@ public class Tui {
 		System.out.println("|Film ID: ");
 		int id = 0;
 		try {
-			id = this.myScanner.nextInt();
+			id = this.inputScanner.expectInteger();
 
 		} catch (NumberFormatException e) {
 			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
@@ -216,7 +216,7 @@ public class Tui {
 
 	private String getCommand() {
 		System.out.println("Bitte einen Menüpunkt wählen: ");
-		String command = myScanner.next();
+		String command = inputScanner.expectString();
 		return command;
 	}
 
@@ -224,16 +224,16 @@ public class Tui {
 		System.out.println("            Film hinzufügen              ");
 		System.out.println("=========================================");
 		System.out.println("|Titel: ");
-		String title = this.myScanner.next();
+		String title = this.inputScanner.expectString();
 		System.out.println("|Runtime in Minutes: ");
-		Integer runtime = this.myScanner.nextInt();
+		Integer runtime = this.inputScanner.expectInteger();
 		System.out.println("|Genre: ");
-		String genre = this.myScanner.next();
+		String genre = this.inputScanner.expectString();
 		System.out.println("|Description: ");
-		String description = this.myScanner.next();
+		String description = this.inputScanner.expectString();
 		LocalDate releaseDate = scanForDate();
 		System.out.println("|Add to your Collection?: [1] for yes [2] for no");
-		int addToCollection = this.myScanner.nextInt();
+		int addToCollection = this.inputScanner.expectInteger();
 		int tmpUserId = 0;
 		if(addToCollection == 1){
 			tmpUserId = currentUser.getId();
@@ -252,11 +252,11 @@ public class Tui {
 		try {
 			// unerlaubte Eingabe
 			System.out.println("|Erscheinungsdatum: Tag");
-			day = Integer.parseInt(this.myScanner.next());
+			day = this.inputScanner.expectDay();
 			System.out.println("|Erscheinungsdatum: Monat");
-			month = Integer.parseInt(this.myScanner.next());
+			month = this.inputScanner.expectMonth();
 			System.out.println("|Erscheinungsdatum: Jahr");
-			year = Integer.parseInt(this.myScanner.next());
+			year = this.inputScanner.expectYear();
 			returnDate = LocalDate.of(year, month, day);
 		} catch (NumberFormatException e) {
 			System.out.println("|Fehlerhafte Eingabe, bitte nur Zahlen eingeben");
@@ -269,7 +269,7 @@ public class Tui {
 
 
 	private void quitCommand() {
-		myScanner.close();
+		this.inputScanner.closeStream();
 		System.out.println("Danke für die Nutzung. Bis zum nächsten mal...");
 		System.exit(0);
 	}
