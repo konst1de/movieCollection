@@ -28,9 +28,9 @@ public class Tui {
 		while (running) {
 			if (currentUser == null) {
 				init();
+			}else{
 				displayMenu();
 			}
-			displayMenu();
 			command = getCommand();
 			execute(command);
 		}
