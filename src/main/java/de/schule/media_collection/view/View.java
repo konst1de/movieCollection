@@ -211,12 +211,6 @@ public class View extends Application {
 		}
 	}
 	
-	public void saveMovie(Movie movie, boolean addCollection) {
-		logicController.editMovie(movie, addCollection);
-	}
-	
-
-	
 	public void restart() {
 		primaryStage.close();
 		Stage stage = new Stage();

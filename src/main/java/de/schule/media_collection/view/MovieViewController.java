@@ -277,9 +277,9 @@ public class MovieViewController {
 		Movie selectedMovie = masterData.get(index);
 		if (selectedMovie != null) {
 			boolean okClicked = view.showMovieEditDialog(selectedMovie);
-			view.getLogicController().editMovie(selectedMovie);
 			if (okClicked) {
 				masterData.set(index, selectedMovie);
+				view.getLogicController().editMovie(selectedMovie);
 			}
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);

@@ -228,7 +228,7 @@ public class Tui {
 			System.out.println("|Old Releasedate: " + movieToEdit.getReleaseDate().toString());
 			System.out.println("|New Releasedate: ");
 			movieToEdit.setReleaseDate(scanForDate());
-			this.controller.editMovie(movieToEdit, false);
+			this.controller.editMovie(movieToEdit);
 		}
 		
 	}
@@ -275,7 +275,7 @@ public class Tui {
 		if(addToCollection == 1){
 			addToCollectionBoolean = true;
 		}
-		controller.editMovie(new Movie(runtime, title, genre, description, releaseDate), addToCollectionBoolean);
+		controller.editMovie(new Movie(runtime, title, genre, description, releaseDate));
 
 	}
 
