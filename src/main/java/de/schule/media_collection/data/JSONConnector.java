@@ -279,5 +279,23 @@ public class JSONConnector {
 			this.storeToFile();
 		}
 	}
+	/**
+	 * Method that check if a user owns a specific movie and returns a boolean.
+	 * @param movieId Integer id of the movie that has to be checked
+	 * @param userId Integer id of the user that has to be checked
+	 * @return Boolean true if its owned and false if not
+	 */
+	public boolean isMovieOwnedByUser(int movieId, int userId) {
+		boolean isOwned = false;
+		for(int i=0; i < userMovies.size();i++){
+			JSONObject currentUserMovie = (JSONObject) userMovies.get(i);
+			int currentUserId = Integer.parseInt(currentUserMovie.get("userId").toString());
+			int currentMovieId = Integer.parseInt(currentUserMovie.get("movieId").toString());
+			if(currentUserId == userId && currentMovieId == movieId){
+				isOwned = true;
+			}
+		}
+		return isOwned;
+	}
 
 }

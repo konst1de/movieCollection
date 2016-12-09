@@ -92,20 +92,43 @@ public class Controller {
 		dataConnector.removeMovieFromCollection(movieToRemove, this.currentUser);
 	}
 	/**
-	 * Method to get an ArrayList containing all movie objects.
-	 * @return List<Movie> with all movies
+	 * Method to get an ArrayList containing all movie objects that are in the user collection.
+	 * @return List<Movie> with all movies that are owned by the user
 	 */
 	public List<Movie> getAllOwnedMovies(){
 		return dataConnector.getAllOwnedMovies(this.currentUser);
 	}
+	/**
+	 * Method to get all owner for a movie. 
+	 * @param movie Movie object of the movie we are getting the owners for
+	 * @return List<User> of the owner of the given movie
+	 */
 	public List<User> getOwnerForMovie(Movie movie){
 		return dataConnector.getUserWhoOwnMovie(movie);
 	}
+	/**
+	 * Method to get a specific movie by its id and if there is none it returns null.
+	 * @param id Integer id of the movie we are looking for
+	 * @return Movie object if the movie is found or null
+	 */
 	public Movie getMovieById(int id){
 		return dataConnector.getMovieById(id);
 	}
+	/**
+	 * Method to get a specific user by its id and if there is none it returns null.
+	 * @param id Integer id of the user we are looking for
+	 * @return User object if the user is found or null
+	 */
 	public User getUserById(int id){
 		return dataConnector.getUserById(id);
+	}
+	/**
+	 * Method to check if the current user owns a specific movie.
+	 * @param movie Movie object that should be checked
+	 * @return Boolean returns true when the user owns the given movie or false if not
+	 */
+	public Boolean isMovieOwnedByUser(Movie movie){
+		return dataConnector.isMovieOwned(movie, currentUser);
 	}
 }
 

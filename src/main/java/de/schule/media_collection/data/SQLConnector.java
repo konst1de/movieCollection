@@ -246,4 +246,28 @@ public class SQLConnector {
 		}
 		
 	}
+	/**
+	 * Method that check if a user owns a specific movie and returns a boolean.
+	 * @param movieId Integer id of the movie that has to be checked
+	 * @param userId Integer id of the user that has to be checked
+	 * @return Boolean true if its owned and false if not
+	 */
+	public boolean isMovieOwnedByUser(int movieId, int userId) {
+		PreparedStatement statement;
+		String checkOwnershipSQL = "SELECT * FROM user_movies WHERE user_id = ? AND movie_id = ?";
+		ResultSet rs = null;
+		boolean isOwned = false;
+		try {
+			statement = this.connection.prepareStatement(checkOwnershipSQL);
+			statement.setInt(1, userId);
+			statement.setInt(2, movieId);
+			rs = statement.executeQuery();
+			if (rs.isBeforeFirst() ) {
+				isOwned = true;
+			}
+		} catch (SQLException e) {
+			System.out.println("CHECKING OWNERSHIP failed: "+ e);
+		} 
+		return isOwned;
+	}
 }
