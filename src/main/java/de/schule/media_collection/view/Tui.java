@@ -9,17 +9,30 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-
+/**
+ * Class which displays the menu 
+ * Possible improvements:
+ * 	- being able to quit at a certain operation and returning to the menu.
+ * 	- more precise output 
+ * @author florianwitt
+ *
+ */
 public class Tui {
 
 	private Controller controller;
 	private InputScanner inputScanner;
-
+	/**
+	 * Constructor for the TUI. Using InputScanner for parsing input.
+	 * @param useSQL boolean to determine which method of storage we initialize the controller with
+	 * @throws SQLException
+	 */
 	public Tui(Boolean useSQL) throws SQLException {
 		controller = new Controller(useSQL);
 		inputScanner = new InputScanner();
 	}
-
+	/**
+	 * Method for the menu that after every action the menu is displayed.
+	 */
 	public void menu() {
 		String command;
 		boolean running = true;
@@ -34,7 +47,9 @@ public class Tui {
 			execute(command);
 		}
 	}
-
+	/**
+	 * Method to choose a user in the start
+	 */
 	private void init() {
 		System.out.println("Please choose a user.");
 		this.listUser();
@@ -43,7 +58,9 @@ public class Tui {
 			displayMenu();
 		}
 	}
-
+	/**
+	 * Method to display the menu
+	 */
 	private void displayMenu() {
 		System.out.println();
 		System.out.println("Welcome " + controller.getCurrentUser().getFirstName());
@@ -62,7 +79,10 @@ public class Tui {
 		System.out.println("|Quit................................[9]|");
 		System.out.println("=========================================");
 	}
-
+	/**
+	 * Method to handle the input in the menu
+	 * @param unparsedCommand Input which is yet unparsed
+	 */
 	private void execute(String unparsedCommand) {
 		int command = 0;
 
@@ -94,70 +114,59 @@ public class Tui {
 			unknownCommand(unparsedCommand);
 		}
 	}
-
+	/**
+	 * Method to initialize the changeUser method. Expecting Integer input
+	 */
 	private void changeUserCommand() {
 		System.out.println("           Change user                   ");
 		System.out.println("=========================================");
 		System.out.println("|User ID: ");
-		int id = 0;
-		try {
-			id = this.inputScanner.expectInteger();
-
-		} catch (NumberFormatException e) {
-			System.out.println("|Incorret input. Please only input numbers.");
-			changeUserCommand();
-		}
+		int id = this.inputScanner.expectInteger();
 		this.changeUser(id);
-
 	}
-
+	/**
+	 * Method to initialize the deleteFromCollection method. Expecting Integer input
+	 */
 	private void deleteFromCollectionCommand() {
 		System.out.println("     Remove movie from your collection   ");
 		System.out.println("=========================================");
 		System.out.println("|Movie ID: ");
-		int id = 0;
-		try {
-			id = this.inputScanner.expectInteger();
-		} catch (NumberFormatException e) {
-			System.out.println("|Incorret input. Please only input numbers.");
-			this.deleteFromCollectionCommand();
-		}
-		
+		int id = this.inputScanner.expectInteger();
 		this.deleteFromCollection(id);
 
 	}
-
+	/**
+	 * Method to initialize the addExistingMovieToCollection method. Expecting Integer input
+	 */
 	private void addExistingMovieToCollectionCommand() {
 		System.out.println("       Add movie to your collection      ");
 		System.out.println("=========================================");
 		System.out.println("|Movie ID: ");
-		int id = 0;
-		try {
-			id = this.inputScanner.expectInteger();
-
-		} catch (NumberFormatException e) {
-			System.out.println("|Incorret input. Please only input numbers.");
-			this.addExistingMovieToCollectionCommand();
-		}
+		int id = this.inputScanner.expectInteger();
 		this.addExistingMovieToCollection(id);
-
 	}
-
-	private void addExistingMovieToCollection(int id) {
-		controller.addExistingMovieToCollection(id);
+	/**
+	 * Method to add an existing user to the collection of the user. Calling the method in the controller with the passed id.
+	 * @param id Integer id of the movie that wants to be added
+	 */
+	private void addExistingMovieToCollection(int movieId) {
+		controller.addExistingMovieToCollection(movieId);
 	}
-
+	/**
+	 * Method to change the currentUser on the controller. Calling the method in the controller with the passed id.
+	 * @param id Integer id of the user that wants to be changed to
+	 */
 	private void changeUser(int userId) {
-		
 		controller.setCurrentUser(controller.getUserById(userId));
-
 		if(controller.getCurrentUser() == null){
 			System.out.println("There is no user with the ID: " + userId + ". Please use an existing ID from the following user.");
 			this.listUser();
 			this.changeUserCommand();
 		}
 	}
-
+	/**
+	 * Method to list all user. Calling function in controller and iterating through result.
+	 */
 	private void listUser() {
 		System.out.println("            List all user                ");
 		System.out.println("=========================================");
@@ -172,7 +181,10 @@ public class Tui {
 			System.out.println(id + " --- " + username + " --- " + firstname + " --- " + lastname);
 		}
 	}
-
+	/**
+	 * Method to delete a movie with a certain id from the collection. 
+	 * @param movieId Integer id of the movie that should be deleted
+	 */
 	private void deleteFromCollection(int movieId) {
 		if(controller.getMovieById(movieId) != null){
 			controller.removeMovieFromCollection(movieId);
@@ -181,7 +193,9 @@ public class Tui {
 			System.out.println("There is no movie with the given ID.");
 		}
 	}
-
+	/**
+	 * Method to list all movies that are owned by the currentUser (which is set in the controller). Iterating throug the result and printing it to the console.
+	 */
 	private void listCollection() {
 		System.out.println("          List your collection           ");
 		System.out.println("=========================================");
@@ -198,14 +212,22 @@ public class Tui {
 			System.out.println(id + " --- " + title + " --- " + genre + " --- " + releaseDate.toString() + " --- " + runtime + " --- " + description);
 		}
 	}
-
+	/**
+	 * Method to display the "table-header" for the movies
+	 */
 	private void listMovieHeader() {
 		System.out.println("ID --- TITLE --- GENRE --- RELEASE DATE --- RUNTIME --- DESCRIPTION");		
 	}
+	/**
+	 * Method to display the "table-header" for the user
+	 */
 	private void listUserHeader() {
 		System.out.println("ID --- USERNAME --- FIRSTNAME --- LASTNAME");		
 	}
-
+	/**
+	 * Method to edit a movie. Waiting for an ID input and checking if the movie exists. If the movie exists the operation starts. 
+	 * If the movie with the given id does not exist nothing happens.
+	 */
 	private void editMovie() {
 		System.out.println("              Edit movie                 ");
 		System.out.println("=========================================");
@@ -232,7 +254,9 @@ public class Tui {
 		}
 		
 	}
-
+	/**
+	 * Method to list all existing movies.
+	 */
 	private void listAllMovies() {
 		System.out.println("           List all movies               ");
 		System.out.println("=========================================");
@@ -250,13 +274,18 @@ public class Tui {
 		}
 
 	}
-
+	/**
+	 * Method to ask for a command when currently in the menu.
+	 * @return
+	 */
 	private String getCommand() {
 		System.out.println("Please choose a menu point.");
 		String command = inputScanner.expectString();
 		return command;
 	}
-
+	/**
+	 * Method to add a movie. Prompting through the different variables for the new movie.
+	 */
 	private void addMovie() {
 		System.out.println("            Add movie                    ");
 		System.out.println("=========================================");
@@ -272,7 +301,10 @@ public class Tui {
 		controller.editMovie(new Movie(runtime, title, genre, description, releaseDate));
 
 	}
-
+	/**
+	 * Method to prompt for single fields of the date.
+	 * @return LocalDate returns a LocalDate Object. If there is an exception parsing the date the operation is restarted with recursion
+	 */
 	private LocalDate scanForDate() {
 		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		LocalDate returnDate = null;
@@ -295,13 +327,19 @@ public class Tui {
 	}
 
 
-
+	/**
+	 * Method to quit
+	 */
 	private void quitCommand() {
 		this.inputScanner.closeStream();
 		System.out.println("Thanks for using the movie collection.");
 		System.exit(0);
 	}
-
+	/** 
+	 * Method to handle unknown commands when you are in the menu. 
+	 * The unknown command is printed and then you return to the menu.
+	 * @param command String the unknown command
+	 */
 	private void unknownCommand(String command) {
 		System.out.println(command+ " is not allowed as input.");
 	}
