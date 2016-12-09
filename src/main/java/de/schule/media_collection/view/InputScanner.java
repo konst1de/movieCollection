@@ -4,13 +4,24 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
+/**
+ * Class to handle input and more important handle wrong input.
+ * Possible Improvements: 
+ * 	- special input to cancel / quit
+ * @author konstantinvogel
+ *
+ */
 public class InputScanner {
 	BufferedReader br = null;
 
 	public InputScanner(){
         br = new BufferedReader(new InputStreamReader(System.in));
 	}
-	
+	/**
+	 * Method which expects a string and handles exception with recursion
+	 * @return String 
+	 */
 	public String expectString(){
 		String returnString = null;
 		try {
@@ -22,6 +33,10 @@ public class InputScanner {
 		return returnString;
 	
 	}
+	/**
+	 * Method which expects an integer and handles exceptions with recursion.
+	 * @return Integer
+	 */
 	public int expectInteger(){
 		int returnInt = 0;
 		try {
@@ -32,6 +47,11 @@ public class InputScanner {
 		}
 		return returnInt;
 	}
+	/**
+	 * Method which expects a integer for an date. Also checking range from 1 to 31. 
+	 * Handles exceptions or integers outside of this given range with recursion.
+	 * @return Integer containing a day
+	 */
 	public int expectDay(){
 		int returnInt = 0;
 		try {
@@ -46,6 +66,11 @@ public class InputScanner {
 		}
 		return returnInt;
 	}
+	/**
+	 * Method which expects a integer for a month. Checking range from 1 to 12. 
+	 * Handles exceptions or integers outside of this given range with recursion.
+	 * @return Integer containing a month
+	 */
 	public int expectMonth(){
 		int returnInt = 0;
 		try {
@@ -61,6 +86,11 @@ public class InputScanner {
 		}
 		return returnInt;
 	}
+	/**
+	 * Method which expects a integer for a year which has to be exactly 4 characters long. 
+	 * Handles exceptions or integers with less than 4 characters with recursion.
+	 * @return Integer containing a year
+	 */
 	public int expectYear(){
 		int returnInt = 0;
 		try {
@@ -76,6 +106,9 @@ public class InputScanner {
 		}
 		return returnInt;
 	}
+	/**
+	 * Method to close the buffered reader.
+	 */
 	public void closeStream(){
 		try {
 			br.close();
