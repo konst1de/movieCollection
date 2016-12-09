@@ -36,8 +36,7 @@ public class SQLConnector {
 			stmt = this.connection.createStatement();
 	        rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("SELECT failed: "+ e);
 		}
         return rs;
     }
@@ -49,8 +48,7 @@ public class SQLConnector {
 			stmt = this.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 	        rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("SELECT failed: "+ e);
 		}
         return rs;
     }
@@ -63,8 +61,7 @@ public class SQLConnector {
 			stmt = this.connection.createStatement();
 	        rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("SELECT failed: "+ e);
 		}
         return rs;
     }
@@ -76,8 +73,7 @@ public class SQLConnector {
 			stmt = this.connection.createStatement();
 	        rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("SELECT failed: "+ e);
 		}
         return rs;
     }
@@ -89,8 +85,7 @@ public class SQLConnector {
 			stmt = this.connection.prepareStatement(query);
 	        rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("SELECT failed: "+ e);
 		}
         return rs;
 	}
@@ -103,7 +98,7 @@ public class SQLConnector {
 			statement.setLong(2, runtime);
 			statement.setString(3, genre);
 			statement.setString(4, description);
-			statement.setDate(5, Date.valueOf(date));
+			statement.setDate(5, date != null ? Date.valueOf(date) : null);
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
 		    rs.next();
@@ -112,9 +107,7 @@ public class SQLConnector {
 		    	this.addMovieToCollection(userId, movieId);
 		    }
 		} catch (SQLException e) {
-			System.out.println(e);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("INSERT failed: "+ e);
 		}
     }
     public void addMovieToCollection(int userId, int movieId){
@@ -127,8 +120,7 @@ public class SQLConnector {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("INSERT failed: "+ e);
 		}
     }
 
@@ -143,12 +135,10 @@ public class SQLConnector {
 			statement.setLong(2, runtime);
 			statement.setString(3, genre);
 			statement.setString(4, description);
-			statement.setDate(5, Date.valueOf(relaseDate));
+			statement.setDate(5, relaseDate != null ? Date.valueOf(relaseDate) : null);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("UPDATE failed: "+ e);
 		}
 	}
 
@@ -162,8 +152,7 @@ public class SQLConnector {
 			statement.setInt(1, movieId);
 			rs = statement.executeQuery(ownedMoviesSQL);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("SELECT failed: "+ e);
 		}
 	    return rs;
 	}
@@ -176,8 +165,7 @@ public class SQLConnector {
 			stmt = this.connection.prepareStatement(query);
 	        rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("SELECT failed: "+ e);
 		}
         return rs;
 	}
@@ -191,8 +179,7 @@ public class SQLConnector {
 			statement.setInt(2, movieId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("DELETING failed: "+ e);
 		}
 		
 	}

@@ -178,7 +178,7 @@ public class View extends Application {
 			UserLoginController controller = loader.getController();
 			
 			Stage dialogStage = new Stage();
-			dialogStage.setTitle("User Login");
+			dialogStage.setTitle("User Selection");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.initOwner(primaryStage);
 			controller.setDialogStage(dialogStage);

@@ -25,7 +25,7 @@
             <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Welcome to your Movie Databse" GridPane.columnSpan="2">
+            <Label text="Welcome to your Movie Collection" GridPane.columnSpan="2">
                <font>
                   <Font size="15.0" />
                </font>

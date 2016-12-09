@@ -286,7 +286,6 @@ public class Tui {
 		int month = 0;
 		int year = 0;
 		try {
-			// unerlaubte Eingabe
 			System.out.println("|Please enter the day of the release date");
 			day = this.inputScanner.expectDay();
 			System.out.println("|Please enter the month of the release date");
@@ -297,7 +296,6 @@ public class Tui {
 		} catch (NumberFormatException e) {
 			System.out.println("|Incorrect input. Please Try again");
 			scanForDate();
-
 		}
 		return returnDate;
 	}

@@ -16,8 +16,8 @@ public class InputScanner {
 		try {
 			returnString = br.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("The input was not valid. Please type in a String.");
+			return this.expectString();
 		}
 		return returnString;
 	
@@ -27,8 +27,8 @@ public class InputScanner {
 		try {
 			returnInt = Integer.parseInt(br.readLine());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("The input was not valid. Please type in an Integer.");
+			return this.expectInteger();
 		}
 		return returnInt;
 	}
@@ -37,12 +37,12 @@ public class InputScanner {
 		try {
 			returnInt = Integer.parseInt(br.readLine());
 			if(!(returnInt>0 && returnInt <= 31)){
-				System.out.println("Bitte Tag im Bereich von 1 und 31 angeben.");
+				System.out.println("Only a Integer between 1 and 31 is valid.");
 				return this.expectDay();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("The input was not valid. Please type in an Integer between 1 and 31.");
+			return expectDay();
 		}
 		return returnInt;
 	}
@@ -52,12 +52,12 @@ public class InputScanner {
 			
 			returnInt = Integer.parseInt(br.readLine());
 			if(!(returnInt>0 && returnInt <= 12)){
-				System.out.println("Bitte Monat im Bereich von 1 bis 12 angeben.");
+				System.out.println("Only a Integer between 1 and 12 is valid.");
 				return this.expectDay();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("The input was not valid. Please type in an Integer between 1 and 12.");
+			return this.expectDay();
 		}
 		return returnInt;
 	}
@@ -66,13 +66,13 @@ public class InputScanner {
 		try {
 			String year = br.readLine();
 			if(year.length() < 4){
-				System.out.println("Bitte Jahr in 4 Stellen ausschreiben.");
+				System.out.println("Please write the year in 4 numbers.");
 				return this.expectDay();
 			}
 			returnInt = Integer.parseInt(year);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Please write the year in 4 numbers.");
+			return this.expectDay();
 		}
 		return returnInt;
 	}
