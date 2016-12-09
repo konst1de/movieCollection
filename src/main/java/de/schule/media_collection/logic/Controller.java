@@ -44,10 +44,10 @@ public class Controller {
 		return dataConnector.getUserFromDatabase();
 	}
 
-	public void editMovie(Movie movie,Boolean addToCollection){
+	public void editMovie(Movie movie){
 		
 		if(dataConnector.getMovieById(movie.getId()) == null){
-			dataConnector.addMovie(movie, this.currentUser.getId(), addToCollection);
+			dataConnector.addMovie(movie);
 		}else{
 			dataConnector.editMovie(movie);
 		}

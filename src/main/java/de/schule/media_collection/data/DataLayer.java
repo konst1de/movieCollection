@@ -122,16 +122,16 @@ public class DataLayer
 		}
 		return ls;
 	}
-	public void addMovie(Movie movie, int userId, boolean addToCollection){
+	public void addMovie(Movie movie){
 		String title = movie.getTitle();
 		int runtime = (int) movie.getRuntime();
 		String genre = movie.getGenre();
 		String description = movie.getDescription();
 		LocalDate date = movie.getReleaseDate();
 		if(useSQL){
-			sqlConnector.addMovie(title, runtime, genre, description, date, addToCollection, userId);
+			sqlConnector.addMovie(title, runtime, genre, description, date);
 		}else{
-			jsonConnector.addMovie(title, runtime, genre, description, date, addToCollection, userId);
+			jsonConnector.addMovie(title, runtime, genre, description, date);
 		}
 		
 

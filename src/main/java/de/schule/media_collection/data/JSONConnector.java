@@ -99,7 +99,7 @@ public class JSONConnector {
 		}
 		return lastId;
 	}
-	public void addMovie(String title, long runtime, String genre, String description, LocalDate date, Boolean addToCollection, int userId) {
+	public void addMovie(String title, long runtime, String genre, String description, LocalDate date) {
 		JSONObject movie = new JSONObject();
 		int lastMovieId = getLastMovieId();
 		lastMovieId++;
@@ -110,9 +110,7 @@ public class JSONConnector {
 		movie.put("description", description);
 		movie.put("releaseDate", date.toString());
 		movies.add(movie);
-		if(addToCollection){
-			this.addMovieToCollection(userId, lastMovieId);
-		}
+
 	}
 	public JSONObject getMovieById(int movieId){
 		for(int i=0; i < movies.size(); i++){

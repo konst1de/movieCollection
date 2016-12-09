@@ -89,7 +89,15 @@ public class SQLConnector {
 		}
         return rs;
 	}
-    public void addMovie(String title, long runtime, String genre, String description, LocalDate date, Boolean addToCollection, int userId){
+    /**
+     * Method to add a new movie to the database table movies
+     * @param title String of the new movie name
+     * @param runtime Integer containing the runtime of the new movie
+     * @param genre String containing the genre of the new movie
+     * @param description String containing the description of the new movie
+     * @param date LocalDate object of the release Date
+     */
+    public void addMovie(String title, long runtime, String genre, String description, LocalDate date){
     	PreparedStatement statement;
 		String movieSql = "INSERT INTO movies (title, runtime, genre, description, release_date) VALUES (?, ?, ?, ?, ?)";
 		try {
@@ -103,13 +111,16 @@ public class SQLConnector {
 			ResultSet rs = statement.getGeneratedKeys();
 		    rs.next();
 		    int movieId = rs.getInt(1);
-		    if(addToCollection){
-		    	this.addMovieToCollection(userId, movieId);
-		    }
+
 		} catch (SQLException e) {
 			System.out.println("INSERT failed: "+ e);
 		}
     }
+    /**
+     * Method to add a new movie to a users collection
+     * @param userId Integer with the id of the user
+     * @param movieId Integer with the id of the movie 
+     */
     public void addMovieToCollection(int userId, int movieId){
     	PreparedStatement statement;
 		String relationShipSql = "INSERT INTO user_movies (user_id, movie_id) VALUES (?, ?)";

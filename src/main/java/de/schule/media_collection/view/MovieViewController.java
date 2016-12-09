@@ -268,7 +268,7 @@ public class MovieViewController {
 		boolean okClicked = view.showMovieEditDialog(tempMovie);
 		if (okClicked) {
 			masterData.add(tempMovie);
-			view.getLogicController().editMovie(tempMovie, false);
+			view.getLogicController().editMovie(tempMovie);
 			view.reloadVideos();
 		}
 	}
@@ -277,7 +277,7 @@ public class MovieViewController {
 		Movie selectedMovie = masterData.get(index);
 		if (selectedMovie != null) {
 			boolean okClicked = view.showMovieEditDialog(selectedMovie);
-			view.getLogicController().editMovie(selectedMovie, false);
+			view.getLogicController().editMovie(selectedMovie);
 			if (okClicked) {
 				masterData.set(index, selectedMovie);
 			}
