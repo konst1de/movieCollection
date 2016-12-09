@@ -1,6 +1,7 @@
 package de.schule.media_collection.data;
 
 import java.sql.DriverManager;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,13 @@ import de.schule.media_collection.logic.Movie;
 
 import java.sql.Connection;
 import java.sql.Date;
+
+/**
+ * Class which handles the SQL Connection and does the queries which are executed on the local database.
+ * Possible Improvements: Database Connection credentials could be initialized in the constructor (to be able to switch databases)
+ * @author konstantinvogel
+ *
+ */
 public class SQLConnector {
 	
 	private String serverName = "localhost";
@@ -27,7 +35,10 @@ public class SQLConnector {
     private Connection connect() throws SQLException{
 		return DriverManager.getConnection(this.mySQLUrl, this.username, this.password);
     }
-    
+    /** 
+     * Method to return all movies that are in the database table.
+     * @return a ResultSet with all Movies
+     */
     public ResultSet getMovies(){
     	String query = "select * from movies";
         Statement stmt = null;
@@ -40,6 +51,11 @@ public class SQLConnector {
 		}
         return rs;
     }
+    /** 
+     * Method to get a specific movie by a given id and if a movie with the given id does not exist it returns null.
+     * @param id an Integer containing the movie ID which we are looking for
+     * @return the movie with the id or null
+     */
     public ResultSet getMovieById(int id){
     	String query = "select * from movies WHERE id = " + id;
         PreparedStatement stmt = null;
@@ -52,7 +68,10 @@ public class SQLConnector {
 		}
         return rs;
     }
-    
+    /** 
+     * Method to return all user that are in the database table.
+     * @return A ResultSet with all User
+     */
     public ResultSet getUser(){
     	String query = "select * from user";
         Statement stmt = null;
@@ -65,6 +84,10 @@ public class SQLConnector {
 		}
         return rs;
     }
+    /**
+     * Method to return the user movie relationships. 
+     * @return a ResultSet containing the userMovies
+     */
     public ResultSet getUserMovies(){
     	String query = "select * from user_movies";
         Statement stmt = null;
@@ -77,6 +100,11 @@ public class SQLConnector {
 		}
         return rs;
     }
+    /**
+     * Method to receive a specific user by his id. If no user with the id exists it returns null.
+     * @param An integer containing an id if a user
+     * @return
+     */
     public ResultSet getUserById(int id) {
     	String query = "select * from user WHERE id = "+ id;
         PreparedStatement stmt = null;
@@ -135,6 +163,15 @@ public class SQLConnector {
 		}
     }
 
+    /**
+     * Method to edit an existing movie.
+     * @param movieId
+     * @param title
+     * @param runtime
+     * @param genre
+     * @param description
+     * @param relaseDate
+     */
 	public void editMovie(int movieId, String title, long runtime, String genre, String description, LocalDate relaseDate) {
 		// TODO Auto-generated method stub
 		PreparedStatement statement;
@@ -152,7 +189,11 @@ public class SQLConnector {
 			System.out.println("UPDATE failed: "+ e);
 		}
 	}
-
+	/**
+	 * Method to get a ResultSet of the User who own a specific movie
+	 * @param movieId Integer of the movieId we want the owner of.
+	 * @return ResultSet of the user who own the movie with the given id
+	 */
 	public ResultSet getUserOwnMovie(int movieId) {
 		// TODO Auto-generated method stub
 		PreparedStatement statement;
@@ -167,7 +208,11 @@ public class SQLConnector {
 		}
 	    return rs;
 	}
-
+	/**
+	 * Method to get a ResultSet of the Movies who a specific user owns
+	 * @param userId Integer of the user we want the movies of.
+	 * @return ResultSet Containing the movies the user with the given id owns.
+	 */
 	public ResultSet getMoviesOwnedByUser(int userId) {
 		String query = "select * from movies WHERE id IN(select movie_id from user_movies where user_id="+userId+")";
         PreparedStatement stmt = null;
@@ -180,7 +225,11 @@ public class SQLConnector {
 		}
         return rs;
 	}
-
+	/**
+	 * Method to remove a movie from the collection of the user.
+	 * @param movieId Integer containing the movie id
+	 * @param userId Integer containing the user id
+	 */
 	public void removeMovieFromUser(int movieId, int userId) {
 		PreparedStatement statement;
 		String deleteOwnershipSQL = "DELETE FROM user_movies WHERE user_id = ? AND movie_id = ?";
@@ -194,7 +243,4 @@ public class SQLConnector {
 		}
 		
 	}
-
-	
-
 }
