@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.geometry.Pos;
 
 import de.schule.media_collection.logic.Movie;
+import de.schule.media_collection.logic.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -230,6 +231,15 @@ public class MovieViewController {
 		sortedData.comparatorProperty().bind(movieTable.comparatorProperty());	
 		movieTable.setItems(sortedData);
 	}
+	
+	public void refreshTable(List<Movie> movieList, List<Movie> userMovieList) {
+		this.movieList = movieList;
+		this.userMovieList = userMovieList;
+		masterData.removeAll(masterData);
+		userMasterData.removeAll(userMasterData);
+		masterData.addAll(this.movieList);
+		userMasterData.addAll(this.userMovieList);
+	}
 
 	private void handleAddToCollection(int index) {
 		Movie selectedMovie = masterData.get(index);
@@ -259,6 +269,7 @@ public class MovieViewController {
 		if (okClicked) {
 			masterData.add(tempMovie);
 			view.getLogicController().editMovie(tempMovie, false);
+			view.reloadVideos();
 		}
 	}
 	

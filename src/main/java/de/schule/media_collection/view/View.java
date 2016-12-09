@@ -29,6 +29,7 @@ public class View extends Application {
 	private List<User> userList;
 	private User currentUser;
 	private Controller logicController;
+	private MovieViewController viewController;
 
 	public View() {
 	}
@@ -78,8 +79,8 @@ public class View extends Application {
 				@Override
 				public Object call(Class<?> controllerClass) {
 					if (controllerClass == MovieViewController.class) {
-						MovieViewController controller = new MovieViewController(movieList, userMovieList, View.this);
-						return controller;
+						viewController = new MovieViewController(movieList, userMovieList, View.this);
+						return viewController;
 					} else {
 						try {
 							return controllerClass.newInstance();
@@ -227,6 +228,7 @@ public class View extends Application {
 	public void reloadVideos() {
 		movieList = logicController.getAllMovies();
 		userMovieList = logicController.getAllOwnedMovies();
+		viewController.refreshTable(movieList, userMovieList);
 	}
 
 	@Override

@@ -1,12 +1,16 @@
 package de.schule.media_collection.view;
 
 import de.schule.media_collection.logic.Movie;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
+import javafx.util.converter.NumberStringConverter;
 
 public class MovieEditController {
 	
@@ -35,6 +39,16 @@ public class MovieEditController {
 	
 	@FXML
 	private void initialize() {
+		runtimeField.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue.matches("\\d*")) {
+					long value = Long.parseLong(newValue);
+				} else {
+					runtimeField.setText(oldValue);
+				}
+			}
+		});
 	}
 	
 	public void setDialogStage(Stage dialogStage) {
@@ -89,6 +103,10 @@ public class MovieEditController {
 		
 		if (descriptionField.getText() == null || descriptionField.getText().length() == 0) {
 			errorMessage += "No valid description!\n";
+		}
+		
+		if (releaseDatePicker.getValue() == null ) {
+			errorMessage += "No valid release date!\n";
 		}
 		
 		if (errorMessage.length() == 0) {
