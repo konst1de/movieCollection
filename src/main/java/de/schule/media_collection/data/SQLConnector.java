@@ -16,7 +16,9 @@ import java.sql.Date;
 
 /**
  * Class which handles the SQL Connection and does the queries which are executed on the local database.
- * Possible Improvements: Database Connection credentials could be initialized in the constructor (to be able to switch databases)
+ * Possible Improvements:
+ * 	- database connection credentials could be initialized in the constructor (to be able to switch databases)
+ * 	- user management (method to add / edit and remove user)
  * @author konstantinvogel
  *
  */

@@ -269,12 +269,6 @@ public class Tui {
 		System.out.println("|Description: ");
 		String description = this.inputScanner.expectString();
 		LocalDate releaseDate = scanForDate();
-		System.out.println("|Add to your Collection?: [1] for yes [2] for no");
-		int addToCollection = this.inputScanner.expectInteger();
-		boolean addToCollectionBoolean = false;
-		if(addToCollection == 1){
-			addToCollectionBoolean = true;
-		}
 		controller.editMovie(new Movie(runtime, title, genre, description, releaseDate));
 
 	}
