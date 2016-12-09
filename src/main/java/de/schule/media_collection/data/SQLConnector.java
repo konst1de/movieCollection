@@ -135,7 +135,7 @@ public class SQLConnector {
 	public void editMovie(int movieId, String title, long runtime, String genre, String description, LocalDate relaseDate) {
 		// TODO Auto-generated method stub
 		PreparedStatement statement;
-		String editSQL = "UPDATE movies set title = ?, runtime = ?, genre = ?, description = ? , release_date";
+		String editSQL = "UPDATE movies set title = ?, runtime = ?, genre = ?, description = ? , release_date = ?";
 		
 		try {
 			statement = connection.prepareStatement(editSQL, Statement.RETURN_GENERATED_KEYS);
