@@ -75,7 +75,6 @@ public class JSONConnector {
 			user = (JSONArray) storageJSON.get("user");
 			movies = (JSONArray) storageJSON.get("movies");
 			userMovies = (JSONArray) storageJSON.get("userMovies");	
-			System.out.println(storageJSON.toJSONString());
 		}
 	}
 	/**
@@ -214,7 +213,6 @@ public class JSONConnector {
 	 */
 	private void storeToFile(){
 		try {
-			System.out.println(storageJSON.toJSONString());
 			File file = new File("storage.json");
 			FileWriter fileWriter = new FileWriter(file);
 			fileWriter.write(storageJSON.toJSONString());
