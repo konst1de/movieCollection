@@ -31,7 +31,19 @@ public class InputScanner {
 			return this.expectString();
 		}
 		return returnString;
-	
+	}
+	/**
+	 * Method which just listens for an enter. 
+	 * Used for showing lists and with enter the user can continue.
+	 */
+	public void expectEnter(){
+		try {
+			System.out.println("Press enter to continue.");
+			br.readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * Method which expects an integer and handles exceptions with recursion.

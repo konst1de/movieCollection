@@ -69,14 +69,15 @@ public class Tui {
 		System.out.println("=========================================");
 		System.out.println("|List all movies.....................[1]|");
 		System.out.println("|Add movie...........................[2]|");
-		System.out.println("|Edit movie..........................[3]|");
-		System.out.println("|List collection.....................[4]|");
-		System.out.println("|Add movie to your collection........[5]|");
-		System.out.println("|Remove movie from your collection...[6]|");
-		System.out.println("|Show all user.......................[7]|");
-		System.out.println("|Change user.........................[8]|");
+		System.out.println("|Delete movie........................[3]|");
+		System.out.println("|Edit movie..........................[4]|");
+		System.out.println("|List collection.....................[5]|");
+		System.out.println("|Add movie to your collection........[6]|");
+		System.out.println("|Remove movie from your collection...[7]|");
+		System.out.println("|Show all user.......................[8]|");
+		System.out.println("|Change user.........................[9]|");
 		// System.out.println("|Zeige alle Filme für Nutzer.........[8]|");
-		System.out.println("|Quit................................[9]|");
+		System.out.println("|Quit................................[0]|");
 		System.out.println("=========================================");
 	}
 	/**
@@ -92,19 +93,21 @@ public class Tui {
 				this.listAllMovies();
 			} else if (command == 2) {
 				this.addMovie();
-			} else if (command == 3) {
-				this.editMovie();
+			} else if (command == 2) {
+				this.deleteMovieCommand();
 			} else if (command == 4) {
-				this.listCollection();
+				this.editMovie();
 			} else if (command == 5) {
-				this.addExistingMovieToCollectionCommand();
+				this.listCollection();
 			} else if (command == 6) {
-				this.deleteFromCollectionCommand();
+				this.addExistingMovieToCollectionCommand();
 			} else if (command == 7) {
-				this.listUser();
+				this.deleteFromCollectionCommand();
 			} else if (command == 8) {
-				this.changeUserCommand();
+				this.listUser();
 			} else if (command == 9) {
+				this.changeUserCommand();
+			} else if (command == 0) {
 				this.quitCommand();
 			} else {
 				unknownCommand(unparsedCommand);
@@ -194,6 +197,7 @@ public class Tui {
 			String lastname = iterateUser.getLastName();
 			System.out.println(id + " --- " + username + " --- " + firstname + " --- " + lastname);
 		}
+		this.inputScanner.expectEnter();
 	}
 	/**
 	 * Method to delete a movie with a certain id from the collection. 
@@ -225,6 +229,7 @@ public class Tui {
 			LocalDate releaseDate = currentMovie.getReleaseDate();
 			System.out.println(id + " --- " + title + " --- " + genre + " --- " + releaseDate.toString() + " --- " + runtime + " --- " + description);
 		}
+		this.inputScanner.expectEnter();
 	}
 	/**
 	 * Method to display the "table-header" for the movies
@@ -286,6 +291,7 @@ public class Tui {
 			LocalDate releaseDate = currentMovie.getReleaseDate();
 			System.out.println(id + " --- " + title + " --- " + genre + " --- " + releaseDate.toString() + " --- " + runtime + " --- " + description);
 		}
+		this.inputScanner.expectEnter();
 
 	}
 	/**
