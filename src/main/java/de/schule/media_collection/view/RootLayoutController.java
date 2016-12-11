@@ -7,19 +7,36 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * Controller class for the root layout
+ * @author Rene
+ *
+ */
 public class RootLayoutController {
 	
 	private View view;
 	
+	/**
+	 * Setter for the javaFX view
+	 * @param view
+	 */
 	public void setView(View view) {
 		this.view = view;
 	}
 	
+	/**
+	 * Method to handle the reload menu event
+	 * Calls the view to reload the database listings
+	 */
 	@FXML
 	private void handleReload() {
 		view.reloadVideos();
 	}
 	
+	/**
+	 * Method to handle the logout menu event
+	 * Restarts the application
+	 */
 	@FXML
 	private void handleLogout() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -35,6 +52,10 @@ public class RootLayoutController {
 		}
 	}
 	
+	/**
+	 * Method to handle the about menu event
+	 * Returns information about the application
+	 */
 	@FXML
 	private void handleAbout() {
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -45,6 +66,10 @@ public class RootLayoutController {
 		alert.showAndWait();
 	}
 	
+	/**
+	 * Method to handle the exit menu event
+	 * Closes the application
+	 */
 	@FXML
 	private void handleExit() {
 		System.exit(0);

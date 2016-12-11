@@ -15,6 +15,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+/**
+ * Controller class for the user login view
+ * @author Rene
+ *
+ */
 public class UserLoginController {
 	
 	@FXML
@@ -32,11 +37,19 @@ public class UserLoginController {
 	private List<User> userList;
 	private ObservableList<User> masterData;
 	
+	/**
+	 * Default Constructor
+	 * @param userList
+	 */
 	public UserLoginController(List<User> userList) {
 		this.userList = userList;
 		this.masterData = FXCollections.observableList(this.userList);
 	}
 	
+	/**
+	 * Default controller initilize method provided by javaFX
+	 * Initilize the ui fields and inserts the data
+	 */
 	@FXML
 	private void initialize() {
 		userComboBox.setItems(masterData);
@@ -66,6 +79,10 @@ public class UserLoginController {
 		});
 	}
 	
+	/**
+	 * Method to handle the sign in button event
+	 * Sets the signIn variable
+	 */
 	@FXML
 	private void handleSignIn() {
 		this.signInClicked = true;
@@ -73,14 +90,26 @@ public class UserLoginController {
 		this.dialogStage.close();
 	}
 	
+	/**
+	 * Setter for the javaFX dialogStage
+	 * @param dialogStage
+	 */
 	public void setDialogStage(Stage dialogStage) {
 		this.dialogStage = dialogStage;
 	}
 	
+	/**
+	 * Returns the value of the signIn variable
+	 * @return boolean
+	 */
 	public boolean isSignInClicked() {
 		return signInClicked;
 	}
 	
+	/**
+	 * Getter for the selectedUser variable
+	 * @return User
+	 */
 	public User getSelectedUser() {
 		return selectedUser;
 	}

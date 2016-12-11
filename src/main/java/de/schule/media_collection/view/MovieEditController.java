@@ -12,6 +12,11 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 
+/**
+ * Controller class for the edit movie ui
+ * @author Rene
+ *
+ */
 public class MovieEditController {
 	
 	@FXML
@@ -33,10 +38,18 @@ public class MovieEditController {
 	private Movie movie;
 	private boolean okClicked = false;
 	
+	/**
+	 * Default constructor
+	 * @param movie
+	 */
 	public MovieEditController(Movie movie) {
 		this.movie = movie;
 	}
 	
+	/**
+	 * Default controller initilize method provided by javaFX
+	 * Initilize the ui fields and inserts the data
+	 */
 	@FXML
 	private void initialize() {
 		runtimeField.textProperty().addListener(new ChangeListener<String>() {
@@ -51,10 +64,17 @@ public class MovieEditController {
 		});
 	}
 	
+	/**
+	 * Setter for the javaFX dialog stage
+	 * @param dialogStage
+	 */
 	public void setDialogStage(Stage dialogStage) {
 		this.dialogStage = dialogStage;
 	}
 	
+	/**
+	 * Setter for the movie object
+	 */
 	public void setMovie() {
 		titleField.setText(movie.getTitle());
 		genreField.setText(movie.getGenre());
@@ -63,10 +83,18 @@ public class MovieEditController {
 		releaseDatePicker.setValue(movie.getReleaseDate());			
 	}
 	
+	/**
+	 * Getter for the okClicked variable
+	 * @return boolean
+	 */
 	public boolean getOkClicked() {
 		return okClicked;
 	}
 	
+	/**
+	 * Method to handle the ok button event
+	 * Sets the movie propertys with the values of the ui fields
+	 */
 	@FXML
 	private void handleOk() {
 		if (isInputValid()) {
@@ -81,11 +109,19 @@ public class MovieEditController {
 		}
 	}
 	
+	/**
+	 * Method to handle the cancel button event
+	 * Closes the ui
+	 */
 	@FXML
 	private void handleCancel() {
 		dialogStage.close();
 	}
 	
+	/**
+	 * Method to check if ui fields contain information
+	 * @return boolean
+	 */
 	private boolean isInputValid() {
 		String errorMessage = "";
 		

@@ -20,6 +20,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+/**
+ * Main JavaFX View Class
+ * Extends the javafx.application.Application class
+ * Initilize all the views + controller, and the logic controller
+ * Possible Improvements:
+ * - userLogin provided by Java Logger class
+ * @author Rene
+ *
+ */
 public class View extends Application {
 
 	private Stage primaryStage;
@@ -31,17 +40,31 @@ public class View extends Application {
 	private Controller logicController;
 	private MovieViewController viewController;
 
+	/**
+	 * Default Constructor
+	 */
 	public View() {
 	}
 	
+	/**
+	 * Getter for the primary stage
+	 * @return Stage
+	 */
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
 	
+	/**
+	 * Getter for the logic controller
+	 * @return Controller
+	 */
 	public Controller getLogicController() {
 		return logicController;
 	}
 	
+	/**
+	 * Initilized the main root layout and the related controller by means of the javaFX loader
+	 */
 	private void initRootLayout() {
 
 		try {
@@ -66,7 +89,9 @@ public class View extends Application {
 
 	}
 
-
+	/**
+	 * Initilized the main movie view and the related controller by means of the javaFX loader
+	 */
 	private void showMovieOverview() {
 		try {
 			movieList = logicController.getAllMovies();	
@@ -101,6 +126,12 @@ public class View extends Application {
 
 	}
 	
+	/**
+	 * Initilize the main edit view and the related controller by means of the javaFX loader
+	 * Returns the user button input
+	 * @param movie
+	 * @return boolean
+	 */
 	public boolean showMovieEditDialog(Movie movie) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
@@ -151,6 +182,9 @@ public class View extends Application {
 		}
 	}
 	
+	/**
+	 * Initilize the user login view and the related controller by means of the javaFX loader
+	 */
 	public void showUserLoginDialog() {
 		try {
 			userList = logicController.getAllUser();
@@ -211,6 +245,9 @@ public class View extends Application {
 		}
 	}
 	
+	/**
+	 * Method to restart the hole application
+	 */
 	public void restart() {
 		primaryStage.close();
 		Stage stage = new Stage();
@@ -219,12 +256,18 @@ public class View extends Application {
 		startApplication();
 	}
 
+	/**
+	 * Method to reload the database listings
+	 */
 	public void reloadVideos() {
 		movieList = logicController.getAllMovies();
 		userMovieList = logicController.getAllOwnedMovies();
 		viewController.refreshTable(movieList, userMovieList);
 	}
 
+	/**
+	 * javaFX start method implemented by javafx application class 
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		
@@ -244,6 +287,9 @@ public class View extends Application {
 		startApplication();
 	}
 	
+	/**
+	 * default method to start the ui
+	 */
 	private void startApplication() {
 		
 		showUserLoginDialog();

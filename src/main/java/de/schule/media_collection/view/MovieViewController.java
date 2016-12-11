@@ -20,6 +20,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
+/**
+ * Controller class for the movie overview 
+ * @author Rene
+ *
+ */
 public class MovieViewController {
 
 	@FXML
@@ -71,6 +76,9 @@ public class MovieViewController {
 	private TableColumn<Movie, Movie> buttonAddColumn;
 	
 	@FXML
+	private TableColumn<Movie, Movie> buttonDeleteColumn;
+	
+	@FXML
 	private TableColumn<Movie, Movie> userButtonRemoveColumn;
 
 	private View view;
@@ -80,6 +88,12 @@ public class MovieViewController {
 	private ObservableList<Movie> masterData;
 	private ObservableList<Movie> userMasterData;
 
+	/**
+	 * Default Constructor
+	 * @param movieList
+	 * @param userMovieList
+	 * @param view
+	 */
 	public MovieViewController(List<Movie> movieList, List<Movie> userMovieList, View view) {
 		this.movieList = new ArrayList<Movie>(movieList);
 		this.userMovieList = new ArrayList<Movie>(userMovieList);
@@ -88,21 +102,37 @@ public class MovieViewController {
 		this.view = view;
 	}
 	
+	/**
+	 * Getter for the javaFX movieDataList
+	 * @return ObservableList<Movie>
+	 */
 	public ObservableList<Movie> getMovieData() {
 		return masterData;
 	}
 	
+	/**
+	 * Getter for the javaFX userMovieDataList
+	 * @return ObservableList<Movie>
+	 */
 	public ObservableList<Movie> getUserMovieData() {
 		return userMasterData;
 	}
 
-
+	/**
+	 * Default controller initilize method provided by javaFX
+	 * Initilize the ui fields and tables and inserts the data
+	 */
 	@FXML
 	private void initialize() {
 		initMovieTable();
 		initUserMovieTable();
 	}
 	
+	/**
+	 * Initilize Method for the user movie table
+	 * Inserts the data into the table view and
+	 * creates the filter field
+	 */
 	private void initUserMovieTable() {
 		userMovieTable.setItems(userMasterData);
 		
@@ -151,6 +181,11 @@ public class MovieViewController {
 		userMovieTable.setItems(sortedData);
 	}
 
+	/**
+	 * Method to handle the remove movie from collection event
+	 * calls the logic controller to remove the movie from collection
+	 * @param index
+	 */
 	private void handleRemoveUserMovie(int index) {
 		Movie selectedMovie = userMasterData.get(index);
 		if (selectedMovie != null) {
@@ -167,6 +202,11 @@ public class MovieViewController {
 		}
 	}
 
+	/**
+	 * Initilize Method for the movie table
+	 * Inserts the data into the table view and
+	 * creates the filter Field
+	 */
 	private void initMovieTable() {
 		movieTable.setItems(masterData);
 		
@@ -209,6 +249,23 @@ public class MovieViewController {
 			return cell;
 			
 		});
+		
+		buttonDeleteColumn.setCellFactory(col -> {
+			Button deleteButton = new Button("Delete Movie");
+			TableCell<Movie, Movie> cell = new TableCell<Movie, Movie>() {
+				public void updateItem(Movie movie, boolean empty) {
+					super.updateItem(movie, empty);
+					this.setAlignment(Pos.CENTER);
+					if (empty) {
+						setGraphic(null);
+					} else {
+						setGraphic(deleteButton);
+					}
+				}
+			};
+			deleteButton.setOnAction(e -> handleDeleteMovie(cell.getIndex()));
+			return cell;
+		});
 				
 		FilteredList<Movie> filteredData = new FilteredList<>(movieTable.getItems(), e -> true);
 		
@@ -232,6 +289,11 @@ public class MovieViewController {
 		movieTable.setItems(sortedData);
 	}
 	
+	/**
+	 * Method to refresh the database listings in the table
+	 * @param movieList
+	 * @param userMovieList
+	 */
 	public void refreshTable(List<Movie> movieList, List<Movie> userMovieList) {
 		this.movieList = movieList;
 		this.userMovieList = userMovieList;
@@ -241,6 +303,11 @@ public class MovieViewController {
 		userMasterData.addAll(this.userMovieList);
 	}
 
+	/**
+	 * Method to handle the add to collection event
+	 * calls the logic controller to add the movie to collection
+	 * @param index
+	 */
 	private void handleAddToCollection(int index) {
 		Movie selectedMovie = masterData.get(index);
 		if (selectedMovie != null) {
@@ -261,7 +328,12 @@ public class MovieViewController {
 		}
 		
 	}
-
+	
+	/**
+	 * Method to handle the add movie event
+	 * calls the view to start the edit movie ui and 
+	 * then calls the datalayer to create a new movie
+	 */
 	@FXML
 	private void handleNewMovie() {
 		Movie tempMovie = new Movie();
@@ -273,6 +345,11 @@ public class MovieViewController {
 		}
 	}
 	
+	/**
+	 * Method to handle the edit movie event
+	 * calls the view to start the edit movie ui and 
+	 * then calls the datalayer to edit a movie
+	 */
 	private void handleEditMovie(int index) {
 		Movie selectedMovie = masterData.get(index);
 		if (selectedMovie != null) {
@@ -292,11 +369,15 @@ public class MovieViewController {
 		}
 	}
 	
-	@FXML
-	private void handleDeleteMovie() {
-		int selectedIndex = movieTable.getSelectionModel().getSelectedIndex();
-		if (selectedIndex >= 0) {
-			movieTable.getItems().remove(selectedIndex);
+	/**
+	 * Method to handle the delete movie event
+	 * calls the datalayer to delete the movie 
+	 */
+	private void handleDeleteMovie(int index) {
+		Movie selectedMovie = masterData.get(index);
+		if (selectedMovie != null) {
+			movieTable.getItems().remove(index);
+			view.getLogicController().deleteMovie(selectedMovie);
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(view.getPrimaryStage());
