@@ -107,6 +107,15 @@ public class Controller {
 		return dataConnector.getUserWhoOwnMovie(movie);
 	}
 	/**
+	 * Method to delete a movie. Checking first if the movie exists.
+	 * @param movie
+	 */
+	public void deleteMovie(Movie movie){
+		if(dataConnector.getMovieById(movie.getId()) != null){
+			dataConnector.deleteMovie(movie);
+		}
+	}
+	/**
 	 * Method to get a specific movie by its id and if there is none it returns null.
 	 * @param id Integer id of the movie we are looking for
 	 * @return Movie object if the movie is found or null

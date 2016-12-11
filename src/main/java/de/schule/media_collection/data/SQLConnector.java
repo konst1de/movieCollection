@@ -270,4 +270,19 @@ public class SQLConnector {
 		} 
 		return isOwned;
 	}
+	/**
+	 * Method to delete the movie from the database. Since the userMovies has set ON DELETE: Cascade it deletes itself
+	 * @param movieId Integer of the id from the movie that wants to be deleted.
+	 */
+	public void deleteMovie(int movieId) {
+		PreparedStatement statement;
+		String deleteMovieSQL = "DELETE FROM movies WHERE id = ?";
+		try {
+			statement = this.connection.prepareStatement(deleteMovieSQL);
+			statement.setInt(1, movieId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("DELETING failed: "+ e);
+		}		
+	}
 }

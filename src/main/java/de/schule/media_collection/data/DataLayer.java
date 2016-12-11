@@ -376,4 +376,12 @@ public class DataLayer
 		}
 		return new Movie(movieId, runtime, title, genre, description, releaseDate);
 	}
+	public void deleteMovie(Movie movie) {
+		
+		if(useSQL){
+			sqlConnector.deleteMovie(movie.getId());
+		}else{
+			jsonConnector.deleteMovie(movie.getId());
+		}
+	}
 }

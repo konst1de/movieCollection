@@ -164,6 +164,20 @@ public class Tui {
 			this.changeUserCommand();
 		}
 	}
+	private void deleteMovie(int movieId){
+		if(controller.getMovieById(movieId) == null){
+			System.out.println("There is no movie with the ID: " + movieId + ". Please use an existing ID from the following movies.");
+			this.listAllMovies();
+			this.deleteMovieCommand();
+		}
+	}
+	private void deleteMovieCommand() {
+		System.out.println("           Delete movie                  ");
+		System.out.println("=========================================");
+		System.out.println("|Movie ID: ");
+		int id = this.inputScanner.expectInteger();
+		this.deleteMovie(id);		
+	}
 	/**
 	 * Method to list all user. Calling function in controller and iterating through result.
 	 */

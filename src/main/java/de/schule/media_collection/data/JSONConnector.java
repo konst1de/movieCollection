@@ -297,5 +297,30 @@ public class JSONConnector {
 		}
 		return isOwned;
 	}
+	/**
+	 * Method to delete a specific movie. Also deleted the ownership of the movie.
+	 * @param movieId Integer of the id from the movie that wants to be deleted
+	 */
+	public void deleteMovie(int movieId) {
+		// removing from JSONArray movies
+		for(int i=0; i < movies.size();i++){
+			JSONObject currentMovie = (JSONObject) movies.get(i);
+			int currentMovieId = Integer.parseInt(currentMovie.get("id").toString());
+			if(currentMovieId == movieId){
+				movies.remove(i);
+			}
+		}		
+		// removing from JSONArray userMovies
+		for(int i=0; i < userMovies.size();i++){
+			JSONObject currentUserMovie = (JSONObject) userMovies.get(i);
+			int currentMovieId = Integer.parseInt(currentUserMovie.get("movieId").toString());
+			if(currentMovieId == movieId){
+				userMovies.remove(i);
+			}
+		}		
+		
+		this.storeToFile();
+
+	}
 
 }
