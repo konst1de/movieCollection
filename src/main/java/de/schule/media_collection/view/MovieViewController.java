@@ -376,7 +376,7 @@ public class MovieViewController {
 	private void handleDeleteMovie(int index) {
 		Movie selectedMovie = masterData.get(index);
 		if (selectedMovie != null) {
-			movieTable.getItems().remove(index);
+			masterData.remove(index);
 			view.getLogicController().deleteMovie(selectedMovie);
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
