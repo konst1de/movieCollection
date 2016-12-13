@@ -229,6 +229,8 @@ public class Tui {
 			LocalDate releaseDate = currentMovie.getReleaseDate();
 			System.out.println(id + " --- " + title + " --- " + genre + " --- " + releaseDate.toString() + " --- " + runtime + " --- " + description);
 		}
+		if(allOwnedMovies.size() == 0 )
+			System.out.println("There are no movies in your collection");
 		this.inputScanner.expectEnter();
 	}
 	/**
@@ -291,6 +293,8 @@ public class Tui {
 			LocalDate releaseDate = currentMovie.getReleaseDate();
 			System.out.println(id + " --- " + title + " --- " + genre + " --- " + releaseDate.toString() + " --- " + runtime + " --- " + description);
 		}
+		if(allMovies.size() == 0)
+			System.out.println("There are no movies stored. Maybe create one?");
 		this.inputScanner.expectEnter();
 
 	}
