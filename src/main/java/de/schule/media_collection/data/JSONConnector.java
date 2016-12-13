@@ -180,7 +180,7 @@ public class JSONConnector extends DataConnector {
 				movieObj = new Movie(currentId, runtime, title, genre, description, releaseDate);
 			}
 		}
-		return null;
+		return movieObj;
 	}
 	/**
 	 * Method to get a specific user by its id. If there is no user with the given id it returns null.
@@ -380,6 +380,7 @@ public class JSONConnector extends DataConnector {
 		// Store LocalDate as String in the JSON
 		movie.put("releaseDate", date.toString());
 		movies.add(movie);
+		this.storeToFile();
 	}
 
 
