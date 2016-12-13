@@ -256,7 +256,7 @@ public class MovieViewController {
 				public void updateItem(Movie movie, boolean empty) {
 					super.updateItem(movie, empty);
 					this.setAlignment(Pos.CENTER);
-					if (empty) {
+					if (empty || userMovieList.contains(movie)) {
 						setGraphic(null);
 					} else {
 						setGraphic(deleteButton);
@@ -310,19 +310,15 @@ public class MovieViewController {
 	 */
 	private void handleAddToCollection(int index) {
 		Movie selectedMovie = masterData.get(index);
-		if (selectedMovie != null) {
-			try {
-				userMasterData.get(index);
-			} catch (Exception e) {
+		if (selectedMovie != null && !userMasterData.contains(selectedMovie)) {
 				userMasterData.add(selectedMovie);
-				view.getLogicController().addExistingMovieToCollection(selectedMovie.getId());
-			}
+				view.getLogicController().addExistingMovieToCollection(selectedMovie.getId());		
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(view.getPrimaryStage());
 			alert.setTitle("No selection");
-			alert.setHeaderText("No Movie Selected");
-			alert.setContentText("Please select a movie in the table.");
+			alert.setHeaderText("Movie allready in collection");
+			alert.setContentText("Please select another movie in the table.");
 			
 			alert.showAndWait();
 		}
@@ -378,6 +374,7 @@ public class MovieViewController {
 		if (selectedMovie != null) {
 			masterData.remove(index);
 			view.getLogicController().deleteMovie(selectedMovie);
+			view.reloadVideos();
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(view.getPrimaryStage());
@@ -388,6 +385,5 @@ public class MovieViewController {
 			alert.showAndWait();
 		}
 	}
-
 
 }
