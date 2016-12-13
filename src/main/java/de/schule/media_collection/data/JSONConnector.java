@@ -8,12 +8,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import de.schule.media_collection.logic.Movie;
+import de.schule.media_collection.logic.User;
 /**
  * Class to handle all actions considering working with the JSON storage file. 
  * To Handle JSON we use the library org.json.simple (SOURCE: https://code.google.com/archive/p/json-simple/)
@@ -24,7 +28,7 @@ import org.json.simple.parser.ParseException;
  * @author konstantinvogel
  *
  */
-public class JSONConnector {
+public class JSONConnector extends DataConnector {
 	private JSONObject storageJSON;
 	private JSONArray user;
 	private JSONArray movies;
@@ -81,15 +85,36 @@ public class JSONConnector {
 	 * Method to get an JSON array of all user.
 	 * @return JSONArray containing all user objects
 	 */
-	public JSONArray getUser() {
-		return user;
+	public List<User> getUser() {
+		List<User> userList = new ArrayList();
+		for (int i=0;i<user.size();i++){ 
+		   	JSONObject userObject = (JSONObject) user.get(i);
+		   	int id = Integer.parseInt(userObject.get("id").toString());
+			String username = (String) userObject.get("username");
+			String firstname = (String) userObject.get("firstname");
+			String lastname = (String) userObject.get("lastname");
+			User user = new User(id, username, firstname, lastname);
+			userList.add(user);		
+		}  
+		return userList;
 	}
 	/**
 	 * Method to get an JSON array of all movies.
 	 * @return JSONArray containing all the movie objects
 	 */
-	public JSONArray getMovies() {
-		return movies;
+	public List<Movie> getMovies() {
+		List<Movie> moviesList = new ArrayList();
+		for (int i=0;i<movies.size();i++){ 
+		   	JSONObject movieJSON= (JSONObject) this.movies.get(i);
+		   	int id = Integer.parseInt(movieJSON.get("id").toString());
+		   	int runtime = Integer.parseInt(movieJSON.get("id").toString());
+			String title = (String) movieJSON.get("title");
+			String description = (String) movieJSON.get("description");
+			String genre = (String) movieJSON.get("genre");
+			LocalDate releaseDate = movieJSON.get("releaseDate") != null ?  LocalDate.parse((String) movieJSON.get("releaseDate"), this.DATE_FORMAT) : null; 
+			moviesList.add(new Movie(id, runtime, title, genre, description, releaseDate));
+		} 
+		return moviesList;
 	}
 
 	/** 
@@ -125,34 +150,13 @@ public class JSONConnector {
 		}
 		return lastId;
 	}
-	/**
-	 * Method to add a new movie to the JSONArray movies.
-	 * @param title String with the title of the new movie
-	 * @param runtime Integer with the runtime of the new movie
-	 * @param genre String with the genre of the new movie
-	 * @param description String containing the description of the new movie
-	 * @param date LocalDate Object that contains the release date of the object.
-	 */
-	public void addMovie(String title, long runtime, String genre, String description, LocalDate date) {
-		JSONObject movie = new JSONObject();
-		int lastMovieId = getLastMovieId();
-		lastMovieId++;
-		movie.put("id", lastMovieId);
-		movie.put("title", title);
-		movie.put("runtime", runtime);
-		movie.put("genre", genre);
-		movie.put("description", description);
-		// Store LocalDate as String in the JSON
-		movie.put("releaseDate", date.toString());
-		movies.add(movie);
-
-	}
+	
 	/**
 	 * Method to get a specific movie by its id. If there is no movie with the given id it returns null.
 	 * @param movieId Integer of the movie id we are looking for
 	 * @return JSONObject of the movie with the specific id
 	 */
-	public JSONObject getMovieById(int movieId){
+	public JSONObject getMovieByIdAsJson(int movieId){
 		for(int i=0; i < movies.size(); i++){
 			JSONObject currentMovie = (JSONObject) movies.get(i);
 			int currentId = Integer.parseInt(currentMovie.get("id").toString());
@@ -162,12 +166,28 @@ public class JSONConnector {
 		}
 		return null;
 	}
+	public Movie getMovieById(int movieId){
+		Movie movieObj = null;
+		for(int i=0; i < movies.size(); i++){
+			JSONObject currentMovie = (JSONObject) movies.get(i);
+			int currentId = Integer.parseInt(currentMovie.get("id").toString());
+			if(currentId == movieId){
+			   	int runtime = Integer.parseInt(currentMovie.get("id").toString());
+				String title = (String) currentMovie.get("title");
+				String description = (String) currentMovie.get("description");
+				String genre = (String) currentMovie.get("genre");
+				LocalDate releaseDate = currentMovie.get("releaseDate") != null ?  LocalDate.parse((String) currentMovie.get("releaseDate"), DATE_FORMAT) : null;
+				movieObj = new Movie(currentId, runtime, title, genre, description, releaseDate);
+			}
+		}
+		return null;
+	}
 	/**
 	 * Method to get a specific user by its id. If there is no user with the given id it returns null.
 	 * @param userId
 	 * @return
 	 */
-	public JSONObject getUserById(int userId){
+	public JSONObject getUserByIdAsJson(int userId){
 		for(int i=0; i < user.size(); i++){
 			JSONObject currentUser = (JSONObject) user.get(i);
 			int currentId = Integer.parseInt(currentUser.get("id").toString());
@@ -176,6 +196,21 @@ public class JSONConnector {
 			}
 		}
 		return null;
+	}
+	
+	public User getUserById(int userId){
+		User userObj = null;
+		for(int i=0; i < user.size(); i++){
+			JSONObject currentUser = (JSONObject) user.get(i);
+			int currentId = Integer.parseInt(currentUser.get("id").toString());
+			if(currentId == userId){
+				String userName = (String) currentUser.get("username");
+				String firstName = (String) currentUser.get("firstname");
+				String lastName = (String) currentUser.get("lastname");
+				userObj = new User(currentId, userName, firstName, lastName);
+			}
+		}
+		return userObj;
 	}
 	/**
 	 * Method to edit an existing movie. First we get the movie with the method this.getMovieById then we edit it and store it to the file.
@@ -187,7 +222,7 @@ public class JSONConnector {
 	 * @param releaseDate LocalDate with the new release date
 	 */
 	public void editMovie(int movieId, String title, long runtime, String genre, String description, LocalDate releaseDate) {
-		JSONObject movie = this.getMovieById(movieId);
+		JSONObject movie = this.getMovieByIdAsJson(movieId);
 		movie.put("title", title);
 		movie.put("runtime", runtime);
 		movie.put("genre", genre);
@@ -201,6 +236,7 @@ public class JSONConnector {
 	 * @param userId Integer containing id of the user which the new movie belongs to
 	 * @param movieId Integer with the id of the new movie the user owns
 	 */
+	@Override
 	public void addMovieToCollection(int userId, int movieId) {
 		JSONObject userMovie = new JSONObject();
 		userMovie.put("userId", userId);
@@ -232,14 +268,15 @@ public class JSONConnector {
 	 * @param movieId Integer containing the movie id
 	 * @return JSONArray of the user who own the given movie
 	 */
-	public JSONArray getUserOwnMovie(int movieId){
-		JSONArray userWhoOwnMovie = new JSONArray();
+	@Override
+	public List<User> getUserOwnMovie(int movieId){
+		List<User> userWhoOwnMovie = new ArrayList();
 		for(int i=0; i<userMovies.size();i++){
 			JSONObject currentUserMovie = (JSONObject) userMovies.get(i);
 			int currentMovieId = Integer.parseInt((currentUserMovie.get("movieId").toString()));
 			if(movieId == currentMovieId){
 				int currentUserId = Integer.parseInt((currentUserMovie.get("userId").toString()));
-				userWhoOwnMovie.add(this.getUserById(currentUserId));
+				userWhoOwnMovie.add(this.getUserById(currentUserId));	
 			}
 		}
 		return userWhoOwnMovie;
@@ -249,17 +286,17 @@ public class JSONConnector {
 	 * @param userId Integer with the id from the user
 	 * @return JSONArray of the movies which are in the collection of the user.
 	 */
-	public JSONArray getMoviesOwnedByUser(int userId){
-		JSONArray moviesOwnedByUser = new JSONArray();
+	public List<Movie> getMoviesOwnedByUser(int userId){
+		List<Movie> ownedMovies = new ArrayList();
 		for(int i=0; i<userMovies.size();i++){
 			JSONObject currentUserMovie = (JSONObject) userMovies.get(i);
 			int currentUserId = Integer.parseInt((currentUserMovie.get("userId").toString()));
 			if(userId == currentUserId){
 				int currentMovieId = Integer.parseInt((currentUserMovie.get("movieId").toString()));
-				moviesOwnedByUser.add(this.getMovieById(currentMovieId));
+				ownedMovies.add(this.getMovieById(currentMovieId));
 			}
 		}
-		return moviesOwnedByUser;
+		return ownedMovies;
 	}
 	/**
 	 * Method to remove movies from the collection of the user
@@ -320,5 +357,31 @@ public class JSONConnector {
 		this.storeToFile();
 
 	}
+	
+	/**
+	 * Method to add a new movie to the JSONArray movies.
+	 * @param title String with the title of the new movie
+	 * @param runtime Integer with the runtime of the new movie
+	 * @param genre String with the genre of the new movie
+	 * @param description String containing the description of the new movie
+	 * @param date LocalDate Object that contains the release date of the object.
+	 */
+	@Override
+	public void addMovie(String title, int runtime, String genre, String description, LocalDate date) {
+		// TODO Auto-generated method stub
+		JSONObject movie = new JSONObject();
+		int lastMovieId = getLastMovieId();
+		lastMovieId++;
+		movie.put("id", lastMovieId);
+		movie.put("title", title);
+		movie.put("runtime", runtime);
+		movie.put("genre", genre);
+		movie.put("description", description);
+		// Store LocalDate as String in the JSON
+		movie.put("releaseDate", date.toString());
+		movies.add(movie);
+	}
+
+
 
 }
