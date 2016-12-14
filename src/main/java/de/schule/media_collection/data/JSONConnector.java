@@ -378,7 +378,7 @@ public class JSONConnector extends DataConnector {
 		movie.put("genre", genre);
 		movie.put("description", description);
 		// Store LocalDate as String in the JSON
-		movie.put("releaseDate", date.toString());
+		movie.put("releaseDate", date != null ? date.toString() : null);
 		movies.add(movie);
 		this.storeToFile();
 	}

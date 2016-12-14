@@ -38,10 +38,9 @@ public class InputScanner {
 	 */
 	public void expectEnter(){
 		try {
-			System.out.println("Press enter to continue.");
+			System.out.println("======== Press enter to continue. ========");
 			br.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
