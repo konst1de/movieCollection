@@ -28,7 +28,7 @@ public class Controller {
 	 */
 	public Controller(boolean useSQL) throws SQLException{
 		try {
-			dataConnector = new DataLayer(useSQL);
+			this.dataConnector = new DataLayer(useSQL);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,22 +54,24 @@ public class Controller {
 	 * @param movieId Integer containing the id of the movie
 	 */
 	public void addExistingMovieToCollection(int movieId){
-		Movie movie = dataConnector.getMovieById(movieId);
-		dataConnector.addMovieToCollection(movie, this.currentUser);
+		Movie movie = this.dataConnector.getMovieById(movieId);
+		if(movie != null && !this.dataConnector.isMovieOwned(movie, this.currentUser)){
+			this.dataConnector.addMovieToCollection(movie, this.currentUser);
+		}
 	}
 	/**
 	 * Method to get an ArrayList containing all movie objects.
 	 * @return List<Movie> with all movies
 	 */
 	public List<Movie> getAllMovies(){
-		return dataConnector.getMoviesFromDatabase();
+		return this.dataConnector.getMoviesFromDatabase();
 	}
 	/**
 	 * Method to get an ArrayList containing all user objects.
 	 * @return List<User> with all user
 	 */
 	public List<User> getAllUser(){	
-		return dataConnector.getUserFromDatabase();
+		return this.dataConnector.getUserFromDatabase();
 	}
 	/**
 	 * Method to edit and add a movie. 
@@ -77,10 +79,10 @@ public class Controller {
 	 * @param movie Movie object of the movie that should be edited/added
 	 */
 	public void editMovie(Movie movie){
-		if(dataConnector.getMovieById(movie.getId()) == null){
-			dataConnector.addMovie(movie);
+		if(this.dataConnector.getMovieById(movie.getId()) == null){
+			this.dataConnector.addMovie(movie);
 		}else{
-			dataConnector.editMovie(movie);
+			this.dataConnector.editMovie(movie);
 		}
 	}
 	/**
@@ -89,14 +91,16 @@ public class Controller {
 	 */
 	public void removeMovieFromCollection(int movieId){
 		Movie movieToRemove = this.getMovieById(movieId);
-		dataConnector.removeMovieFromCollection(movieToRemove, this.currentUser);
+		if(movieToRemove != null && dataConnector.isMovieOwned(movieToRemove, this.currentUser)){
+			this.dataConnector.removeMovieFromCollection(movieToRemove, this.currentUser);
+		}
 	}
 	/**
 	 * Method to get an ArrayList containing all movie objects that are in the user collection.
 	 * @return List<Movie> with all movies that are owned by the user
 	 */
 	public List<Movie> getAllOwnedMovies(){
-		return dataConnector.getAllOwnedMovies(this.currentUser);
+		return this.dataConnector.getAllOwnedMovies(this.currentUser);
 	}
 	/**
 	 * Method to get all owner for a movie. 
@@ -104,15 +108,15 @@ public class Controller {
 	 * @return List<User> of the owner of the given movie
 	 */
 	public List<User> getOwnerForMovie(Movie movie){
-		return dataConnector.getUserWhoOwnMovie(movie);
+		return this.dataConnector.getUserWhoOwnMovie(movie);
 	}
 	/**
 	 * Method to delete a movie. Checking first if the movie exists.
 	 * @param movie
 	 */
 	public void deleteMovie(Movie movie){
-		if(dataConnector.getMovieById(movie.getId()) != null){
-			dataConnector.deleteMovie(movie);
+		if(this.dataConnector.getMovieById(movie.getId()) != null){
+			this.dataConnector.deleteMovie(movie);
 		}
 	}
 	/**
@@ -121,7 +125,7 @@ public class Controller {
 	 * @return Movie object if the movie is found or null
 	 */
 	public Movie getMovieById(int id){
-		return dataConnector.getMovieById(id);
+		return this.dataConnector.getMovieById(id);
 	}
 	/**
 	 * Method to get a specific user by its id and if there is none it returns null.
@@ -129,7 +133,7 @@ public class Controller {
 	 * @return User object if the user is found or null
 	 */
 	public User getUserById(int id){
-		return dataConnector.getUserById(id);
+		return this.dataConnector.getUserById(id);
 	}
 	/**
 	 * Method to check if the current user owns a specific movie.
@@ -137,7 +141,7 @@ public class Controller {
 	 * @return Boolean returns true when the user owns the given movie or false if not
 	 */
 	public Boolean isMovieOwnedByUser(Movie movie){
-		return dataConnector.isMovieOwned(movie, currentUser);
+		return this.dataConnector.isMovieOwned(movie, currentUser);
 	}
 }
 
