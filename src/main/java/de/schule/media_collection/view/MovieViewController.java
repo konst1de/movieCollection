@@ -3,10 +3,12 @@ package de.schule.media_collection.view;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.geometry.Pos;
 
 import de.schule.media_collection.logic.Movie;
-import de.schule.media_collection.logic.User;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -124,8 +126,8 @@ public class MovieViewController {
 	 */
 	@FXML
 	private void initialize() {
-		initMovieTable();
 		initUserMovieTable();
+		initMovieTable();
 	}
 	
 	/**
@@ -215,55 +217,60 @@ public class MovieViewController {
 		genreColumn.setCellValueFactory(cellData -> cellData.getValue().genreProperty());
 		descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 		releaseColumn.setCellValueFactory(cellData -> cellData.getValue().releaseDateProperty());
+		
+		buttonEditColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue()));
 		buttonEditColumn.setCellFactory(col -> {
 			Button editButton = new Button("Edit Movie");
 			TableCell<Movie, Movie> cell = new TableCell<Movie, Movie>() {
 				public void updateItem(Movie movie, boolean empty) {
 					super.updateItem(movie, empty);
 					this.setAlignment(Pos.CENTER);
-					if (empty) {
+					if (movie == null || empty) {
 						setGraphic(null);
 					} else {
 						setGraphic(editButton);
+						editButton.setOnAction(e -> handleEditMovie(movie));
 					}
 				}
 			};
-			editButton.setOnAction(e -> handleEditMovie(cell.getIndex()));
 			return cell;
 		});
 		
+		buttonAddColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue()));
 		buttonAddColumn.setCellFactory(col -> {
 			Button addButton = new Button("Add to Collection");
 			TableCell<Movie, Movie> cell = new TableCell<Movie, Movie>() {
 				public void updateItem(Movie movie, boolean empty) {
 					super.updateItem(movie, empty);
 					this.setAlignment(Pos.CENTER);
-					if (empty) {
+					this.disableProperty().bind(Bindings.createBooleanBinding(() -> userMasterData.contains(movie), userMasterData, this.itemProperty()));
+					if (movie == null || empty) {
 						setGraphic(null);
 					} else {
 						setGraphic(addButton);
+						addButton.setOnAction(e -> handleAddToCollection(movie));
 					}
 				}
 			};
-			addButton.setOnAction(e -> handleAddToCollection(cell.getIndex()));
 			return cell;
 			
 		});
 		
+		buttonDeleteColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue()));
 		buttonDeleteColumn.setCellFactory(col -> {
 			Button deleteButton = new Button("Delete Movie");
 			TableCell<Movie, Movie> cell = new TableCell<Movie, Movie>() {
 				public void updateItem(Movie movie, boolean empty) {
 					super.updateItem(movie, empty);
 					this.setAlignment(Pos.CENTER);
-					if (empty || userMovieList.contains(movie)) {
+					if (movie == null || empty) {
 						setGraphic(null);
 					} else {
 						setGraphic(deleteButton);
+						deleteButton.setOnAction(e -> handleDeleteMovie(movie));
 					}
 				}
 			};
-			deleteButton.setOnAction(e -> handleDeleteMovie(cell.getIndex()));
 			return cell;
 		});
 				
@@ -308,8 +315,7 @@ public class MovieViewController {
 	 * calls the logic controller to add the movie to collection
 	 * @param index
 	 */
-	private void handleAddToCollection(int index) {
-		Movie selectedMovie = masterData.get(index);
+	private void handleAddToCollection(Movie selectedMovie) {
 		if (selectedMovie != null && !userMasterData.contains(selectedMovie)) {
 				userMasterData.add(selectedMovie);
 				view.getLogicController().addExistingMovieToCollection(selectedMovie.getId());		
@@ -346,12 +352,11 @@ public class MovieViewController {
 	 * calls the view to start the edit movie ui and 
 	 * then calls the datalayer to edit a movie
 	 */
-	private void handleEditMovie(int index) {
-		Movie selectedMovie = masterData.get(index);
+	private void handleEditMovie(Movie selectedMovie) {
 		if (selectedMovie != null) {
 			boolean okClicked = view.showMovieEditDialog(selectedMovie);
 			if (okClicked) {
-				masterData.set(index, selectedMovie);
+				masterData.set(masterData.indexOf(selectedMovie), selectedMovie);
 				view.getLogicController().editMovie(selectedMovie);
 			}
 		} else {
@@ -369,10 +374,9 @@ public class MovieViewController {
 	 * Method to handle the delete movie event
 	 * calls the datalayer to delete the movie 
 	 */
-	private void handleDeleteMovie(int index) {
-		Movie selectedMovie = masterData.get(index);
+	private void handleDeleteMovie(Movie selectedMovie) {
 		if (selectedMovie != null) {
-			masterData.remove(index);
+			masterData.remove(masterData.indexOf(selectedMovie));
 			view.getLogicController().deleteMovie(selectedMovie);
 			view.reloadVideos();
 		} else {
@@ -385,5 +389,14 @@ public class MovieViewController {
 			alert.showAndWait();
 		}
 	}
-
+	
+	@SuppressWarnings("unused")
+	private static boolean containsId(ObservableList<Movie> list, int id) {
+	    for (Movie object : list) {
+	        if (object.getId() == id) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 }

@@ -212,4 +212,23 @@ public class Movie {
 		this.releaseDate.set(date);
 	}
 	
+	/**
+	 * Override equals to check if list contains object with same id
+	 */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        return this.id.intValue() == ((Movie) obj).id.intValue();
+    }
+
+    /**
+	 * Override equals to check if list contains object with same id
+	 */
+    @Override
+    public int hashCode() {
+        return 7 + 5*id.intValue();
+    }
+	
 }

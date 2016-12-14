@@ -283,7 +283,6 @@ public class View extends Application {
 		}
 		
 		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle("MovieOverview");
 		startApplication();
 	}
 	
@@ -295,6 +294,7 @@ public class View extends Application {
 		showUserLoginDialog();
 		
 		if (currentUser != null) {
+			this.primaryStage.setTitle("MovieOverview - " + currentUser.getFirstName() + " " + currentUser.getLastName());
 			initRootLayout();
 			showMovieOverview();
 		} else {
