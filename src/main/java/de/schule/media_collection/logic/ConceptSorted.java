@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.common.io.ByteStreams;
@@ -18,7 +19,7 @@ import de.schule.media_collection.data.DataLayer;
  * @author konstantinvogel
  *
  */
-public class ConceptUnsorted extends ConceptSorter implements ConceptInterface {
+public class ConceptSorted extends ConceptSorter implements ConceptInterface {
 	private User currentUser;
 	private DataLayer dataConnector;
 	/**
@@ -26,7 +27,7 @@ public class ConceptUnsorted extends ConceptSorter implements ConceptInterface {
 	 * @param useSQL boolean which decides wether we use sql or json
 	 * @throws SQLException
 	 */
-	public ConceptUnsorted(boolean useSQL) throws SQLException{
+	public ConceptSorted(boolean useSQL) throws SQLException{
 		try {
 			this.dataConnector = new DataLayer(useSQL);
 		} catch (SQLException e) {
@@ -64,7 +65,7 @@ public class ConceptUnsorted extends ConceptSorter implements ConceptInterface {
 	 * @return List<Movie> with all movies
 	 */
 	public List<Movie> getAllMovies(){
-		return this.dataConnector.getMoviesFromDatabase();
+		return this.sortMovie(this.dataConnector.getMoviesFromDatabase());
 	}
 	/**
 	 * Method to get an ArrayList containing all user objects.
@@ -100,7 +101,8 @@ public class ConceptUnsorted extends ConceptSorter implements ConceptInterface {
 	 * @return List<Movie> with all movies that are owned by the user
 	 */
 	public List<Movie> getAllOwnedMovies(){
-		return this.dataConnector.getAllOwnedMovies(this.currentUser);
+		
+		return this.sortMovie(this.dataConnector.getAllOwnedMovies(this.currentUser));
 	}
 	/**
 	 * Method to get all owner for a movie. 
@@ -143,9 +145,10 @@ public class ConceptUnsorted extends ConceptSorter implements ConceptInterface {
 	public Boolean isMovieOwnedByUser(Movie movie){
 		return this.dataConnector.isMovieOwned(movie, currentUser);
 	}
+	
 	public List<Movie> sortMovie(List<Movie> movieList) {
-		// TODO Auto-generated method stub
-		return null;
+		Collections.sort(movieList);
+		return movieList;
 	}
 }
 

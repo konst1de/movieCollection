@@ -19,7 +19,7 @@ import java.util.Scanner;
  */
 public class Tui {
 
-	private Controller controller;
+	private ConceptSorted controller;
 	private InputScanner inputScanner;
 	/**
 	 * Constructor for the TUI. Using InputScanner for parsing input.
@@ -27,7 +27,7 @@ public class Tui {
 	 * @throws SQLException
 	 */
 	public Tui(Boolean useSQL) throws SQLException {
-		controller = new Controller(useSQL);
+		controller = new ConceptSorted(useSQL);
 		inputScanner = new InputScanner();
 	}
 	/**

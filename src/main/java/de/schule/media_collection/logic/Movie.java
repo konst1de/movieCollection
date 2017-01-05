@@ -1,5 +1,6 @@
 package de.schule.media_collection.logic;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 import javafx.beans.property.IntegerProperty;
@@ -17,7 +18,7 @@ import javafx.beans.property.StringProperty;
  * @author ReneSachse
  *
  */
-public class Movie {
+public class Movie implements Comparable<Movie> {
 	
 	private final IntegerProperty id;
 	private final LongProperty runtime;
@@ -230,5 +231,14 @@ public class Movie {
     public int hashCode() {
         return 7 + 5*id.intValue();
     }
+    
+	@Override
+	public int compareTo(Movie comparableMovie) {
+		Timestamp thisTimestamp = Timestamp.valueOf(this.getReleaseDate().atStartOfDay());
+		Timestamp compareTimestamp = Timestamp.valueOf(comparableMovie.getReleaseDate().atStartOfDay());
+        return thisTimestamp.compareTo(compareTimestamp);
+	}
+   
+    
 	
 }
