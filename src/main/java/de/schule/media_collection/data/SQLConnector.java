@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.sql.Date;
  * @author konstantinvogel
  *
  */
-public class SQLConnector extends DataConnector{
+public class SQLConnector implements DataConnector{
 	
 	private String serverName = "localhost";
 	private String dbName = "media_collection";
@@ -32,6 +33,8 @@ public class SQLConnector extends DataConnector{
     private String username = "root";
     private String password = "";
     private Connection connection;
+    private  DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     public SQLConnector() throws SQLException{
     	this.connection = connect();
     }

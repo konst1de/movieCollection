@@ -55,6 +55,9 @@ public class InputScanner {
 		} catch (IOException e) {
 			System.out.println("The input was not valid. Please type in an Integer.");
 			return this.expectInteger();
+		} catch (NumberFormatException e) {
+			System.out.println("The input was not valid. Please type in an Integer.");
+			return this.expectInteger();
 		}
 		return returnInt;
 	}
@@ -72,6 +75,9 @@ public class InputScanner {
 				return this.expectDay();
 			}
 		} catch (IOException e) {
+			System.out.println("The input was not valid. Please type in an Integer between 1 and 31.");
+			return expectDay();
+		}catch (NumberFormatException e) {
 			System.out.println("The input was not valid. Please type in an Integer between 1 and 31.");
 			return expectDay();
 		}
@@ -94,6 +100,9 @@ public class InputScanner {
 		} catch (IOException e) {
 			System.out.println("The input was not valid. Please type in an Integer between 1 and 12.");
 			return this.expectDay();
+		} catch (NumberFormatException e) {
+			System.out.println("The input was not valid. Please type in an Integer between 1 and 12.");
+			return this.expectDay();
 		}
 		return returnInt;
 	}
@@ -112,6 +121,9 @@ public class InputScanner {
 			}
 			returnInt = Integer.parseInt(year);
 		} catch (IOException e) {
+			System.out.println("Please write the year in 4 numbers.");
+			return this.expectDay();
+		} catch (NumberFormatException e) {
 			System.out.println("Please write the year in 4 numbers.");
 			return this.expectDay();
 		}

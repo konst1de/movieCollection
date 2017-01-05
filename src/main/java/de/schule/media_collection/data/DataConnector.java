@@ -7,8 +7,7 @@ import java.util.List;
 import de.schule.media_collection.logic.Movie;
 import de.schule.media_collection.logic.User;
 
-public abstract class DataConnector {
-    protected  DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+interface DataConnector {
 
 	public abstract List<Movie> getMovies();
 

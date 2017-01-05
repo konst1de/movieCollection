@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -28,11 +29,13 @@ import de.schule.media_collection.logic.User;
  * @author konstantinvogel
  *
  */
-public class JSONConnector extends DataConnector {
+public class JSONConnector implements DataConnector {
 	private JSONObject storageJSON;
 	private JSONArray user;
 	private JSONArray movies;
 	private JSONArray userMovies;
+    private  DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 	public JSONConnector(){
 		JSONParser parser = new JSONParser();
 		File storageFile = new File("storage.json");
@@ -41,7 +44,6 @@ public class JSONConnector extends DataConnector {
 			try {
 				storageFile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -56,7 +58,14 @@ public class JSONConnector extends DataConnector {
 			defaultUser.put("username", "kv");
 			defaultUser.put("firstname", "Konstantin");
 			defaultUser.put("lastname", "Vogel");
+			JSONObject defaultUser2 = new JSONObject();
+			defaultUser2.put("id", 2);
+			defaultUser2.put("username", "fw");
+			defaultUser2.put("firstname", "Florian");
+			defaultUser2.put("lastname", "Witt");
 			user.add(defaultUser);
+			user.add(defaultUser2);
+
 			storageJSON.put("user", user);
 			storageJSON.put("movies", movies);
 			storageJSON.put("userMovies", userMovies);
