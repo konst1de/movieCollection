@@ -19,15 +19,16 @@ import java.util.Scanner;
  */
 public class Tui {
 
-	private ConceptSorted controller;
+	private ConceptInterface controller;
 	private InputScanner inputScanner;
 	/**
 	 * Constructor for the TUI. Using InputScanner for parsing input.
 	 * @param useSQL boolean to determine which method of storage we initialize the controller with
 	 * @throws SQLException
 	 */
-	public Tui(Boolean useSQL) throws SQLException {
-		controller = new ConceptSorted(useSQL);
+	public Tui(Boolean useSQL, boolean sort) throws SQLException {
+		
+		controller = sort ? new ConceptSorted(useSQL) : new ConceptUnsorted(useSQL) ;
 		inputScanner = new InputScanner();
 	}
 	/**

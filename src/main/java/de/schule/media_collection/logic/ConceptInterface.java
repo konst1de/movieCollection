@@ -15,4 +15,5 @@ public interface ConceptInterface {
 	public abstract Movie getMovieById(int id);
 	public abstract User getUserById(int id);
 	public abstract Boolean isMovieOwnedByUser(Movie movie);
+	public abstract void removeMovieFromCollection(int movieId);
 }

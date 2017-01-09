@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import de.schule.media_collection.logic.ConceptInterface;
 import de.schule.media_collection.logic.ConceptSorted;
+import de.schule.media_collection.logic.ConceptUnsorted;
 import de.schule.media_collection.logic.Movie;
 import de.schule.media_collection.logic.User;
 import javafx.application.Application;
@@ -37,7 +39,7 @@ public class View extends Application {
 	private List<Movie> userMovieList;
 	private List<User> userList;
 	private User currentUser;
-	private ConceptSorted logicController;
+	private ConceptInterface logicController;
 	private MovieViewController viewController;
 
 	/**
@@ -58,7 +60,7 @@ public class View extends Application {
 	 * Getter for the logic controller
 	 * @return Controller
 	 */
-	public ConceptSorted getLogicController() {
+	public ConceptInterface getLogicController() {
 		return logicController;
 	}
 	
@@ -272,9 +274,10 @@ public class View extends Application {
 	public void start(Stage primaryStage) {
 		
 		boolean useSql = getParameters().getUnnamed().get(0).equals("--use-sql");
-        
+		boolean sort = getParameters().getUnnamed().get(2).equals("--sort");
+
 		try {
-			 logicController = new ConceptSorted(useSql);
+			 logicController = sort ? new ConceptSorted(useSql) : new ConceptUnsorted(useSql);
 		} catch (SQLException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Connection Error!");
